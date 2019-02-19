@@ -5,7 +5,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace StatsFetcher.modules
+
+namespace Stats.Fetcher.Modules
 {
     public class JobManager : IHostedService, IDisposable
     {

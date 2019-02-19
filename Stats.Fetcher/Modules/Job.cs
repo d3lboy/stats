@@ -1,9 +1,13 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Stats.Fetcher;
+using Stats.Fetcher.Modules;
+using Stats.Fetcher.Jobs.ABA;
 
-namespace StatsFetcher.modules
+namespace Stats.Fetcher.Modules
 {
     public class Job : IJob
     {
@@ -20,8 +24,13 @@ namespace StatsFetcher.modules
         {
             WebBrowser browser = new WebBrowser(logger, appConfig);
 
-            string html = await browser.LoadUrl("https://www.aba-liga.com/player.php?id=2589");
-            File.WriteAllText("page.html", html);
+            string html = await browser.LoadUrl("https://www.aba-liga.com/player.php?id=3091");
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            var playerInfo = new AbaPlayerInfo();
+
+            logger.LogDebug(playerInfo.ParsePlayerInfo(doc).ToString());
 
             return !string.IsNullOrEmpty(html);
         }

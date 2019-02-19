@@ -1,4 +1,4 @@
-﻿namespace StatsFetcher
+﻿namespace Stats.Fetcher
 {
     public class AppConfig
     {

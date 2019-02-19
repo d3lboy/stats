@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScrapySharp.Network;
+using Stats.Fetcher;
+using Stats.Fetcher.Modules;
 
-namespace StatsFetcher.modules
+namespace Stats.Fetcher.Modules
 {
     public class WebBrowser : IWebBrowser
     {

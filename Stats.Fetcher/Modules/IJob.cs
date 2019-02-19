@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace StatsFetcher.modules
+namespace Stats.Fetcher.Modules
 {
     public interface IJob
     {
