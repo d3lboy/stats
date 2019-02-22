@@ -26,8 +26,10 @@ namespace Stats.Fetcher
                 {
                     services.AddOptions();
                     services.Configure<AppConfig>(hostContext.Configuration.GetSection("AppConfig"));
+
                     services.AddSingleton<IHostedService, JobManager>();
                     services.AddTransient<IJob, Job>();
+
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
