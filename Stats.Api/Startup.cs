@@ -34,7 +34,7 @@ namespace Stats.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, StatsDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -45,6 +45,8 @@ namespace Stats.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            context.Seed();
 
             app.UseHttpsRedirection();
             app.UseMvc();

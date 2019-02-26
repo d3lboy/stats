@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Stats.Api.Models;
 
 namespace Stats.Api.Controllers
 {
@@ -10,6 +11,12 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly StatsDbContext context;
+
+        public ValuesController(StatsDbContext context)
+        {
+            this.context = context;
+        }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
