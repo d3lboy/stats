@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Stats.Api.Enums;
+using Stats.Common.Enums;
 
 namespace Stats.Api.Models
 {

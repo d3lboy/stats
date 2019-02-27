@@ -32,4 +32,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Stats.Common\Stats.Common.csproj" />
+  </ItemGroup>
+
 </Project>

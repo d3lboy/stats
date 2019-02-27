@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Stats.Common.Enums;
 
 namespace Stats.Api.Models
 {
@@ -10,6 +8,10 @@ namespace Stats.Api.Models
     {
         [Key]
         public int Id { get; set; }
+
+        public RoundType RoundType { get; set; }
         public Season Season { get; set; }
+        [ForeignKey("Season")]
+        public string SeasonId { get; set; }
     }
 }

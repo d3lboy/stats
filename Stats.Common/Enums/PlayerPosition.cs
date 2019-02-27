@@ -1,4 +1,4 @@
-﻿namespace Stats.Api.Enums
+﻿namespace Stats.Common.Enums
 {
     public enum PlayerPosition
     {

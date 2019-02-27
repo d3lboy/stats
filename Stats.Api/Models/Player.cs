@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Stats.Api.Enums;
+using Stats.Common.Enums;
 
 namespace Stats.Api.Models
 {

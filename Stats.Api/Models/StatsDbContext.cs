@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Stats.Common;
+using Stats.Common.Dto;
 
 namespace Stats.Api.Models
 {
@@ -17,5 +19,6 @@ namespace Stats.Api.Models
         public DbSet<Team> Teams { get; set; }
         public DbSet<Period> Periods { get; set; }
         public DbSet<BoxScore> BoxScores { get; set; }
+        public DbSet<RoundDto> RoundDto { get; set; }
     }
 }
