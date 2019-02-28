@@ -1,13 +1,20 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stats.Api.Models
 {
     public class BoxScore : BaseModel
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Player Player { get; set; }
+        [ForeignKey("Player")]
+        public Guid PlayerId { get; set; }
         public Game Game { get; set; }
+        [ForeignKey("Game")]
+        public Guid GameId { get; set; }
 
         public ushort SecondsPlayed { get; set; }
 

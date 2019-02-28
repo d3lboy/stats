@@ -1,15 +1,15 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using Stats.Common.Enums;
 
 namespace Stats.Api.Models
 {
     public class Competition : BaseModel
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public Common.Enums.Competition Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; }
+
+        public Country Country { get; set; }
     }
 }
