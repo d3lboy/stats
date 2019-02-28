@@ -46,9 +46,9 @@ namespace Stats.Api.Migrations
 
                     b.Property<int>("FoulRv");
 
-                    b.Property<Guid?>("GameId");
+                    b.Property<Guid>("GameId");
 
-                    b.Property<Guid?>("PlayerId");
+                    b.Property<Guid>("PlayerId");
 
                     b.Property<int>("RebsD");
 
@@ -75,8 +75,9 @@ namespace Stats.Api.Migrations
 
             modelBuilder.Entity("Stats.Api.Models.Competition", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id");
+
+                    b.Property<int>("Country");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100);
@@ -95,7 +96,7 @@ namespace Stats.Api.Migrations
 
                     b.Property<short>("HomeScore");
 
-                    b.Property<Guid?>("HomeTeamId");
+                    b.Property<Guid>("HomeTeamId");
 
                     b.Property<DateTime>("Schedule");
 
@@ -103,7 +104,7 @@ namespace Stats.Api.Migrations
 
                     b.Property<short>("VisitorScore");
 
-                    b.Property<Guid?>("VisitorTeamId");
+                    b.Property<Guid>("VisitorTeamId");
 
                     b.HasKey("Id");
 
@@ -114,12 +115,38 @@ namespace Stats.Api.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("Stats.Api.Models.Job", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Args")
+                        .HasMaxLength(1000);
+
+                    b.Property<int>("Competition");
+
+                    b.Property<DateTime>("ExecutedDate");
+
+                    b.Property<DateTime>("ScheduledDate");
+
+                    b.Property<int>("State");
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.Property<string>("Url")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Jobs");
+                });
+
             modelBuilder.Entity("Stats.Api.Models.Period", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("GameId");
+                    b.Property<Guid>("GameId");
 
                     b.Property<short>("HomeScore");
 
@@ -182,11 +209,13 @@ namespace Stats.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(20);
 
-                    b.Property<Guid>("Competition");
+                    b.Property<int>("CompetitionId");
 
                     b.Property<DateTime>("Timestamp");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompetitionId");
 
                     b.ToTable("Seasons");
                 });
@@ -230,29 +259,34 @@ namespace Stats.Api.Migrations
                 {
                     b.HasOne("Stats.Api.Models.Game", "Game")
                         .WithMany()
-                        .HasForeignKey("GameId");
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Stats.Api.Models.Player", "Player")
                         .WithMany()
-                        .HasForeignKey("PlayerId");
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Stats.Api.Models.Game", b =>
                 {
                     b.HasOne("Stats.Api.Models.Team", "HomeTeam")
                         .WithMany()
-                        .HasForeignKey("HomeTeamId");
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Stats.Api.Models.Team", "VisitorTeam")
                         .WithMany()
-                        .HasForeignKey("VisitorTeamId");
+                        .HasForeignKey("VisitorTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Stats.Api.Models.Period", b =>
                 {
                     b.HasOne("Stats.Api.Models.Game", "Game")
                         .WithMany()
-                        .HasForeignKey("GameId");
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Stats.Api.Models.Round", b =>
@@ -260,6 +294,14 @@ namespace Stats.Api.Migrations
                     b.HasOne("Stats.Api.Models.Season", "Season")
                         .WithMany()
                         .HasForeignKey("SeasonId");
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.Season", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Competition", "Competition")
+                        .WithMany()
+                        .HasForeignKey("CompetitionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

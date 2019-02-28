@@ -12,7 +12,9 @@ namespace Stats.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Stats.Common.Enums.Competition Competition { get; set; }
-        public Url Url { get; set; }
+        [MaxLength(255)]
+        public string Url { get; set; }
+        [MaxLength(1000)]
         public string Args { get; set; }
         public DateTime ScheduledDate { get; set; }
         public DateTime ExecutedDate { get; set; }

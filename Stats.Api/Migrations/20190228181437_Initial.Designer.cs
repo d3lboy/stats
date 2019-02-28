@@ -10,8 +10,8 @@ using Stats.Api.Models;
 namespace Stats.Api.Migrations
 {
     [DbContext(typeof(StatsDbContext))]
-    [Migration("20190225200236_Models2")]
-    partial class Models2
+    [Migration("20190228181437_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,10 +21,65 @@ namespace Stats.Api.Migrations
                 .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Stats.Api.Models.Competition", b =>
+            modelBuilder.Entity("Stats.Api.Models.BoxScore", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Ass");
+
+                    b.Property<int>("BlckAg");
+
+                    b.Property<int>("BlckFv");
+
+                    b.Property<int>("Fg1A");
+
+                    b.Property<int>("Fg1M");
+
+                    b.Property<int>("Fg2A");
+
+                    b.Property<int>("Fg2M");
+
+                    b.Property<int>("Fg3A");
+
+                    b.Property<int>("Fg3M");
+
+                    b.Property<int>("FoulCm");
+
+                    b.Property<int>("FoulRv");
+
+                    b.Property<Guid>("GameId");
+
+                    b.Property<Guid>("PlayerId");
+
+                    b.Property<int>("RebsD");
+
+                    b.Property<int>("RebsO");
+
+                    b.Property<int>("SecondsPlayed");
+
+                    b.Property<int>("St");
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.Property<int>("To");
+
+                    b.Property<int>("Val");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("BoxScores");
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.Competition", b =>
+                {
+                    b.Property<int>("Id");
+
+                    b.Property<int>("Country");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100);
@@ -43,7 +98,7 @@ namespace Stats.Api.Migrations
 
                     b.Property<short>("HomeScore");
 
-                    b.Property<Guid?>("HomeTeamId");
+                    b.Property<Guid>("HomeTeamId");
 
                     b.Property<DateTime>("Schedule");
 
@@ -51,7 +106,7 @@ namespace Stats.Api.Migrations
 
                     b.Property<short>("VisitorScore");
 
-                    b.Property<Guid?>("VisitorTeamId");
+                    b.Property<Guid>("VisitorTeamId");
 
                     b.HasKey("Id");
 
@@ -62,12 +117,38 @@ namespace Stats.Api.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("Stats.Api.Models.Job", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Args")
+                        .HasMaxLength(1000);
+
+                    b.Property<int>("Competition");
+
+                    b.Property<DateTime>("ExecutedDate");
+
+                    b.Property<DateTime>("ScheduledDate");
+
+                    b.Property<int>("State");
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.Property<string>("Url")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Jobs");
+                });
+
             modelBuilder.Entity("Stats.Api.Models.Period", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("GameId");
+                    b.Property<Guid>("GameId");
 
                     b.Property<short>("HomeScore");
 
@@ -87,11 +168,17 @@ namespace Stats.Api.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("DateOfBirth");
+
                     b.Property<string>("FirstName")
                         .HasMaxLength(30);
 
+                    b.Property<short>("Height");
+
                     b.Property<string>("LastName")
                         .HasMaxLength(30);
+
+                    b.Property<int>("Position");
 
                     b.Property<DateTime>("Timestamp");
 
@@ -104,6 +191,8 @@ namespace Stats.Api.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("RoundType");
 
                     b.Property<string>("SeasonId");
 
@@ -122,11 +211,13 @@ namespace Stats.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(20);
 
-                    b.Property<Guid>("Competition");
+                    b.Property<int>("CompetitionId");
 
                     b.Property<DateTime>("Timestamp");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompetitionId");
 
                     b.ToTable("Seasons");
                 });
@@ -154,22 +245,50 @@ namespace Stats.Api.Migrations
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("Stats.Common.Dto.RoundDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Season");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoundDto");
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.BoxScore", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Stats.Api.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Stats.Api.Models.Game", b =>
                 {
                     b.HasOne("Stats.Api.Models.Team", "HomeTeam")
                         .WithMany()
-                        .HasForeignKey("HomeTeamId");
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Stats.Api.Models.Team", "VisitorTeam")
                         .WithMany()
-                        .HasForeignKey("VisitorTeamId");
+                        .HasForeignKey("VisitorTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Stats.Api.Models.Period", b =>
                 {
                     b.HasOne("Stats.Api.Models.Game", "Game")
                         .WithMany()
-                        .HasForeignKey("GameId");
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Stats.Api.Models.Round", b =>
@@ -177,6 +296,14 @@ namespace Stats.Api.Migrations
                     b.HasOne("Stats.Api.Models.Season", "Season")
                         .WithMany()
                         .HasForeignKey("SeasonId");
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.Season", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Competition", "Competition")
+                        .WithMany()
+                        .HasForeignKey("CompetitionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
