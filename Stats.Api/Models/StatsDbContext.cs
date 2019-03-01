@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Stats.Common;
 using Stats.Common.Dto;
 
 namespace Stats.Api.Models

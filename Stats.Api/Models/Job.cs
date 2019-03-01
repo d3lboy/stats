@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Policy;
 using Stats.Common.Enums;
 
 namespace Stats.Api.Models
@@ -11,7 +10,7 @@ namespace Stats.Api.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public Stats.Common.Enums.Competition Competition { get; set; }
+        public Common.Enums.Competition Competition { get; set; }
         [MaxLength(255)]
         public string Url { get; set; }
         [MaxLength(1000)]

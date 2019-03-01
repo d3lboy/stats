@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Stats.Fetcher.Library;
+using Stats.Fetcher.Library.Browser;
 using Stats.Fetcher.Modules;
 
 namespace Stats.Fetcher
@@ -29,6 +31,7 @@ namespace Stats.Fetcher
 
                     services.AddSingleton<IHostedService, JobManager>();
                     services.AddTransient<IJob, Job>();
+                    services.AddTransient<Client, Client>();
 
                 })
                 .ConfigureLogging((hostingContext, logging) =>
