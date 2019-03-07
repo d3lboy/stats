@@ -1,46 +1,63 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options; 
+using Microsoft.Extensions.Options;
 using Stats.Common.Dto;
-using Stats.Fetcher.Library.Browser;
-using Stats.Fetcher.Modules;
+using Stats.Common.Enums;
+using Stats.Fetcher.Library.Clients;
 
 namespace Stats.Fetcher.Library
 {
     public class JobManager : IHostedService, IDisposable
     {
-        private ConcurrentDictionary<Guid, JobDto> jobs = new ConcurrentDictionary<Guid, JobDto>();
+        private readonly ConcurrentDictionary<Guid, JobDto> jobs = new ConcurrentDictionary<Guid, JobDto>();
         private readonly ILogger<JobManager> logger;
         private readonly IOptions<AppConfig> appConfig;
-        private readonly Client client;
+        private readonly IApiClient client;
 
-        public JobManager(ILogger<JobManager> logger, IOptions<AppConfig> appConfig, IJob job, Client client)
+        public JobManager(ILogger<JobManager> logger, IOptions<AppConfig> appConfig, IApiClient client)
         {
             this.logger = logger;
             this.appConfig = appConfig;
             this.client = client;
-            //job.Start();
         }
+
+        public List<KeyValuePair<Competition, int>> JobsPerCompetition =>
+            jobs.Values.ToList()
+                .GroupBy(g => g.Competition)
+                .Select(x => new KeyValuePair<Competition, int>(x.Key, x.Count())).ToList();
 
         private async void FetchNewJobs_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            if (jobs.Count > 50) return;//TODO parameterize
+            await GetNewJobs();
+        }
+
+        private async Task GetNewJobs()
+        {
             try
             {
-                string url = appConfig.Value.ApiUrl + "jobs";
-                logger.LogInformation($"Get new jobs from {url}");
-                var newJobs = await client.GetObject<List<JobDto>>(url);
+                var newJobs = await client.Post<List<JobDto>>("jobs/fetch", new JobFilter());
 
-                logger.LogDebug($"Loaded {newJobs.Count} jobs.");
+                UpdateCache(newJobs);
+                logger.LogDebug($"Loaded {newJobs.Count} jobs. By competition: {this}");
             }
             catch (Exception exception)
             {
                 logger.LogError(exception.Message);
             }
+        }
+        private void UpdateCache(List<JobDto> newJobs)
+        {
+            newJobs.ForEach(job =>
+            {
+                if (!jobs.ContainsKey(job.Id)) jobs.TryAdd(job.Id, job);
+            });
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -48,8 +65,8 @@ namespace Stats.Fetcher.Library
             logger.LogInformation($"Started.");
             var fetchNewJobs = new System.Timers.Timer()
             {
-                AutoReset = false,
-                Interval = 1000
+                AutoReset = true,
+                Interval = 10000
             };
 
             fetchNewJobs.Elapsed += FetchNewJobs_Elapsed;
@@ -63,9 +80,14 @@ namespace Stats.Fetcher.Library
             return Task.CompletedTask;
         }
 
+        public override string ToString()
+        {
+            return $"{string.Join(",", JobsPerCompetition.Select(x => $"{x.Key.ToString()}({x.Value})"))}";
+        }
+
         public void Dispose()
         {
-            //
+            client.Dispose();
         }
     }
 }

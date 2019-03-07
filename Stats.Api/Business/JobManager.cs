@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Stats.Api.Business.Exceptions;
@@ -26,6 +27,15 @@ namespace Stats.Api.Business
                 .OrderBy(x => x.ScheduledDate).Take(10).ToListAsync();
 
             return jobs.Any() ? jobs.Select(Map).ToList() : new List<JobDto>();
+        }
+
+        public async Task<List<JobDto>> GetJobs(JobFilter filter)
+        {
+            var result = await context.Jobs.Where(x =>
+                        x.State == JobState.New)
+                    .OrderBy(x => x.ScheduledDate).Take(100).ToListAsync();
+
+            return result.Any() ? result.Select(Map).ToList() : new List<JobDto>();
         }
 
         public async Task<JobDto> GetJob(Guid id)
@@ -113,4 +123,3 @@ namespace Stats.Api.Business
         }
     }
 }
-  

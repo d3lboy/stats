@@ -46,7 +46,21 @@ namespace Stats.Api.Controllers
             catch (ItemNotFoundException)
             {
                 return NotFound();
-            } 
+            }
+        }
+
+        [Route("fetch")]
+        [HttpPost]
+        public async Task<ActionResult<List<JobDto>>> Fetch([FromBody] JobFilter filter)
+        {
+            try
+            {
+                return await jobManager.GetJobs(filter);
+            }
+            catch (ItemNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // PUT: api/JobDtoes/5

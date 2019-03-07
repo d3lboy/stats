@@ -21,7 +21,7 @@ namespace Stats.Api.Controllers
         }
         // GET: api/Rounds
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<string>> Get()
         {
             return new string[] { "value1", "value2" };
         }
