@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Stats.Common.Dto;
 
@@ -9,6 +10,7 @@ namespace Stats.Fetcher.Library.Clients
         Task<T> Get<T>(string action);
         Task<bool> Post(string action, BaseDto dto);
         Task<T> Post<T>(string action, BaseDto dto);
+        Task<T> Post<T>(string action, List<BaseDto> dtos);
         Task<bool> Put(string action, BaseDto dto);
         Task<bool> Delete(string action);
     }

@@ -3,7 +3,7 @@ using Stats.Common.Enums;
 
 namespace Stats.Common.Dto
 {
-    public class JobDto
+    public class JobDto: BaseDto
     {
         public Guid Id { get; set; }
         public Competition Competition { get; set; }

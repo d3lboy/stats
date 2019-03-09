@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Stats.Fetcher.Library;
 using Stats.Fetcher.Library.Clients;
-using Stats.Fetcher.Modules;
 
 namespace Stats.Fetcher
 {
@@ -29,9 +28,8 @@ namespace Stats.Fetcher
                     services.AddOptions();
                     services.Configure<AppConfig>(hostContext.Configuration.GetSection("AppConfig"));
 
-                    services.AddSingleton<IHostedService, JobManager>();
-                    services.AddTransient<IJob, Job>();
-                    //services.AddTransient<Browser, Browser>();
+                    services.AddSingleton<IHostedService, JobManager>();                   
+                    services.AddTransient<Browser, Browser>();
                     services.AddTransient<IApiClient, ApiClient>();
 
                 })

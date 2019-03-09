@@ -1,5 +1,5 @@
 ﻿using HtmlAgilityPack;
-using Stats.Fetcher.Library.Dto;
+using Stats.Common.Dto;
 
 namespace Stats.Fetcher.Library
 {

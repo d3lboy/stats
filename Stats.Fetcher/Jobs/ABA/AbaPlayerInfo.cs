@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using HtmlAgilityPack;
 using ScrapySharp.Extensions;
+using Stats.Common.Dto;
 using Stats.Fetcher.Library;
-using Stats.Fetcher.Library.Dto;
 
 namespace Stats.Fetcher.Jobs.ABA
 {

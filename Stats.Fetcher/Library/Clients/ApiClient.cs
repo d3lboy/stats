@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,18 @@ namespace Stats.Fetcher.Library.Clients
 
             var response = await client.PostAsync(url, content);
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<T> Post<T>(string action, List<BaseDto> dtos)
+        {
+            string url = $"{appConfig.Value.ApiUrl}{action}";
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(url, content);
+            if (!response.IsSuccessStatusCode) return default;
+
+            string str = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(str);
         }
 
         public async Task<T> Post<T>(string action, BaseDto dto)

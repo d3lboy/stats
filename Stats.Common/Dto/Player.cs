@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Stats.Fetcher.Library.Dto
+namespace Stats.Common.Dto
 {
-    public class Player
+    public class Player : BaseDto
     {
         public Guid Guid { get; set; }
         public Guid League { get; set; }
