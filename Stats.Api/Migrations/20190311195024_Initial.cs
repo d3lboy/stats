@@ -29,6 +29,7 @@ namespace Stats.Api.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Timestamp = table.Column<DateTime>(nullable: false),
                     Competition = table.Column<int>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
                     Url = table.Column<string>(maxLength: 255, nullable: true),
                     Args = table.Column<string>(maxLength: 1000, nullable: true),
                     ScheduledDate = table.Column<DateTime>(nullable: false),
@@ -61,9 +62,12 @@ namespace Stats.Api.Migrations
                 name: "RoundDto",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    Season = table.Column<string>(nullable: true)
+                    Id = table.Column<Guid>(nullable: false),
+                    Source = table.Column<string>(nullable: true),
+                    RoundNumber = table.Column<int>(nullable: false),
+                    Season = table.Column<Guid>(nullable: false),
+                    RoundType = table.Column<int>(nullable: false),
+                    Timestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,8 +94,9 @@ namespace Stats.Api.Migrations
                 name: "Seasons",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 20, nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     Timestamp = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(maxLength: 20, nullable: true),
                     CompetitionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -138,11 +143,11 @@ namespace Stats.Api.Migrations
                 name: "Rounds",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Timestamp = table.Column<DateTime>(nullable: false),
+                    RoundNumber = table.Column<int>(nullable: false),
                     RoundType = table.Column<int>(nullable: false),
-                    SeasonId = table.Column<string>(nullable: true)
+                    SeasonId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,7 +157,7 @@ namespace Stats.Api.Migrations
                         column: x => x.SeasonId,
                         principalTable: "Seasons",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

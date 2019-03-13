@@ -11,6 +11,7 @@ namespace Stats.Fetcher.Library.Clients
         Task<bool> Post(string action, BaseDto dto);
         Task<T> Post<T>(string action, BaseDto dto);
         Task<T> Post<T>(string action, List<BaseDto> dtos);
+        Task<bool> Put(BaseDto dto);
         Task<bool> Put(string action, BaseDto dto);
         Task<bool> Delete(string action);
     }

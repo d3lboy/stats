@@ -104,7 +104,8 @@ namespace Stats.Api.Business
                 Args = job.Args,
                 ExecutedDate = job.ExecutedDate,
                 Id = job.Id,
-                Url = job.Url
+                Url = job.Url,
+                Competition = job.Competition
             };
         }
 

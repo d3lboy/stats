@@ -7,8 +7,9 @@ namespace Stats.Api.Models
     public class Season : BaseModel
     {
         [Key]
+        public Guid Id { get; set; }
         [MaxLength(20)]
-        public string Id { get; set; }
+        public string Name { get; set; }
         public Competition Competition { get; set; }
         [ForeignKey("Competition")]
         public Stats.Common.Enums.Competition CompetitionId { get; set; }

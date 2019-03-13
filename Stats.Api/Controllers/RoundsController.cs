@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Remotion.Linq.Utilities;
+using Stats.Api.Business;
+using Stats.Api.Business.Exceptions;
 using Stats.Api.Models;
 using Stats.Common.Dto;
 using Stats.Common.Enums;
@@ -14,61 +17,77 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class RoundsController : ControllerBase
     {
-        private readonly StatsDbContext context;
+        private readonly RoundManager roundManager;
         public RoundsController(StatsDbContext context)
         {
-            this.context = context;
+            roundManager = new RoundManager(context);
         }
         // GET: api/Rounds
-        [HttpGet]
-        public async Task<IEnumerable<string>> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        //[HttpGet]
+        //public async Task<IEnumerable<RoundDto>> Get()
+        //{
+        //    return roundManager.GetRounds()
+        //}
 
+        /// <summary>
+        /// Get rounds from a season
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/Rounds/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<IEnumerable<RoundDto>> Get(Guid id)
         {
-            return "value";
+            return await roundManager.GetRounds(id);
         }
 
         // POST: api/Rounds
 
         [HttpPost]
-        public async Task<ActionResult<List<RoundDto>>> Post([FromBody]List<RoundDto> rounds)
+        public async Task<ActionResult<bool>> Post([FromBody]List<RoundDto> rounds)
         {
-            string season = rounds.First()?.Season;
-            var existingRounds = context.Rounds.Where(x => x.Season.Id == season).ToList();
-
-            rounds.ForEach(round =>
+            try
             {
-                if (existingRounds.All(x => x.Id != round.Id))
-                {
-                    context.Rounds.Add(new Round()
-                    {
-                        Id = round.Id,
-                        SeasonId = season,
-                        RoundType = RoundType.RegularSeason,
-                        Timestamp = DateTime.Now
-                    });
-                }
-            });
-            await context.SaveChangesAsync();
-
-            return rounds;
+                int result = await roundManager.SaveNewRounds(rounds);
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/Rounds/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<int>> Put(Guid id, [FromBody] RoundDto dto)
         {
+            try
+            {
+                if(id != dto.Id)
+                    return BadRequest();
+
+                int result = await roundManager.UpdateRound(dto);
+                return Ok(result);
+            }
+            catch(ItemNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult<int>> Delete(Guid id)
         {
+            try
+            {
+                int result = await roundManager.DeleteRound(id);
+                return Ok(result);
+            }
+            catch (ItemNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

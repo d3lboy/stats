@@ -10,8 +10,8 @@ using Stats.Api.Models;
 namespace Stats.Api.Migrations
 {
     [DbContext(typeof(StatsDbContext))]
-    [Migration("20190309090959_AddedJobType")]
-    partial class AddedJobType
+    [Migration("20190311195024_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -191,12 +191,14 @@ namespace Stats.Api.Migrations
 
             modelBuilder.Entity("Stats.Api.Models.Round", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("RoundNumber");
 
                     b.Property<int>("RoundType");
 
-                    b.Property<string>("SeasonId");
+                    b.Property<Guid>("SeasonId");
 
                     b.Property<DateTime>("Timestamp");
 
@@ -209,11 +211,13 @@ namespace Stats.Api.Migrations
 
             modelBuilder.Entity("Stats.Api.Models.Season", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("CompetitionId");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(20);
 
                     b.Property<DateTime>("Timestamp");
 
@@ -249,12 +253,18 @@ namespace Stats.Api.Migrations
 
             modelBuilder.Entity("Stats.Common.Dto.RoundDto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Season");
+                    b.Property<int>("RoundNumber");
+
+                    b.Property<int>("RoundType");
+
+                    b.Property<Guid>("Season");
 
                     b.Property<string>("Source");
+
+                    b.Property<DateTime>("Timestamp");
 
                     b.HasKey("Id");
 
@@ -299,7 +309,8 @@ namespace Stats.Api.Migrations
                 {
                     b.HasOne("Stats.Api.Models.Season", "Season")
                         .WithMany()
-                        .HasForeignKey("SeasonId");
+                        .HasForeignKey("SeasonId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Stats.Api.Models.Season", b =>

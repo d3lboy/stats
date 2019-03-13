@@ -1,8 +1,14 @@
-﻿namespace Stats.Common.Dto
+﻿using System;
+using Stats.Common.Enums;
+
+namespace Stats.Common.Dto
 {
     public class RoundDto : BaseDto
     {
-        public int Id { get; set; }
-        public string Season { get; set; }
+        public Guid Id { get; set; }
+        public int RoundNumber { get; set; }
+        public Guid Season { get; set; }
+        public RoundType RoundType { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
