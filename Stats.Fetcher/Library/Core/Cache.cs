@@ -22,7 +22,7 @@ namespace Stats.Fetcher.Library.Core
             this.appConfig = appConfig;
         }
 
-        public Action<JobDto> Updated;
+        public Action<JobDto> Updated { get; set; }
 
         public List<KeyValuePair<Competition, int>> JobsPerCompetition =>
             jobs.Values.ToList()

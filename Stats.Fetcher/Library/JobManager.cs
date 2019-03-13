@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Stats.Common.Dto;
 using Stats.Common.Enums;
 using Stats.Fetcher.Library.Clients;
@@ -18,20 +16,23 @@ namespace Stats.Fetcher.Library
     {
         
         private readonly ILogger<JobManager> logger;
-        private readonly IOptions<AppConfig> appConfig;
-        private readonly IServiceProvider serviceProvider;
         private readonly IJobFactory jobFactory;
         private readonly IApiClient client;
         private readonly ICache cache;
 
-        public JobManager(ILogger<JobManager> logger, IOptions<AppConfig> appConfig, IServiceProvider serviceProvider, IJobFactory jobFactory, IApiClient client, ICache cache)
+        public JobManager(ILogger<JobManager> logger, IJobFactory jobFactory, IApiClient client, ICache cache)
         {
             this.logger = logger;
-            this.appConfig = appConfig;
-            this.serviceProvider = serviceProvider;
             this.jobFactory = jobFactory;
             this.client = client;
             this.cache = cache;
+
+            this.cache.Updated += Updated;
+        }
+
+        private async void Updated(JobDto job)
+        {
+            await UpdateJob(job);
         }
 
         private async Task<bool> UpdateJob(JobDto job)
