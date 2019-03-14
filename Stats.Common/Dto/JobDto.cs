@@ -12,8 +12,7 @@ namespace Stats.Common.Dto
         public DateTime ScheduledDate { get; set; }
         public DateTime ExecutedDate { get; set; }
         public JobState State { get; set; }
-        
-        
+        public JobType Type { get; set; }
 
         public JobDto()
         {
@@ -22,7 +21,7 @@ namespace Stats.Common.Dto
 
         public override string ToString()
         {
-            return $"Competition: {Competition}, Url: {Url}";
+            return $"Competition: {Enum.GetName(typeof(Competition), Competition)}, Type: {Type}, Id:{Id}, State: {Enum.GetName(typeof(JobState), State)}";
         }
     }
 }

@@ -12,7 +12,7 @@ using Stats.Fetcher.Library.Core;
 
 namespace Stats.Fetcher.Jobs.ABA
 {
-    [JobFlags(Competition.Aba, JobType.Rounds)]
+    [JobFlags(Common.Enums.Competition.Aba, JobType.Rounds)]
     public class Rounds : JobBase
     {
         private readonly ILogger<Rounds> logger;

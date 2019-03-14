@@ -28,7 +28,7 @@ namespace Stats.Fetcher.Library.Core
             LoadAllJobs();
         }
 
-        public IJobBase CreateInstance(Competition competition, JobType type)
+        public IJobBase CreateInstance(Common.Enums.Competition competition, JobType type)
         {
             var job = Jobs.SingleOrDefault(x => x.Competition == competition && x.Type == type);
             if (job == null) return null;

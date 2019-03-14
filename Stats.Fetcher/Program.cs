@@ -35,6 +35,9 @@ namespace Stats.Fetcher
                     services.AddTransient<Browser, Browser>();
                     services.AddTransient<IApiClient, ApiClient>();
                     services.AddTransient<IJobFactory, JobFactory>();
+                    services.AddTransient<ICompetition, Competition>();
+                    services.AddTransient<ICompetitionFactory, CompetitionFactory>();
+                    services.AddTransient<ISynchronizer, Synchronizer>();
                     services.AddTransient<Rounds, Rounds>();
 
                 })

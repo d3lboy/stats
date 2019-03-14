@@ -5,7 +5,7 @@ namespace Stats.Fetcher.Library.Core
 {
     public interface IJobFactory
     {
-        IJobBase CreateInstance(Competition competition, JobType type);
+        IJobBase CreateInstance(Common.Enums.Competition competition, JobType type);
         List<JobInfo> Jobs { get; }
     }
 }

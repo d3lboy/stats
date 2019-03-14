@@ -105,7 +105,8 @@ namespace Stats.Api.Business
                 ExecutedDate = job.ExecutedDate,
                 Id = job.Id,
                 Url = job.Url,
-                Competition = job.Competition
+                Competition = job.Competition,
+                Type = job.Type
             };
         }
 
@@ -119,7 +120,8 @@ namespace Stats.Api.Business
                 ExecutedDate = job.ExecutedDate,
                 Id = job.Id,
                 Url = job.Url,
-                Competition = job.Competition
+                Competition = job.Competition,
+                Type = job.Type
             };
         }
     }

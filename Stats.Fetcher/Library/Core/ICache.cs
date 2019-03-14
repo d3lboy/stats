@@ -7,9 +7,12 @@ namespace Stats.Fetcher.Library.Core
 {
     public interface ICache
     {
-        Action<JobDto> Updated { get; set; }
-        List<KeyValuePair<Competition, int>> JobsPerCompetition { get; }
-        JobDto GetJobCandidate(Competition competition);
+        Action<List<JobDto>> JobsAdded { get; set; }
+        Action<JobDto> JobUpdated { get; set; }
+        Action<JobDto> JobFinished { get; set; }
+        List<KeyValuePair<Common.Enums.Competition, int>> JobsPerCompetition { get; }
+        JobDto GetJobCandidate(Common.Enums.Competition competition);
+        int Count { get; }
         void Add(List<JobDto> newJobs);
         void Update(JobDto dto);
     }

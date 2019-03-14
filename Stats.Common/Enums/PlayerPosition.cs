@@ -1,5 +1,8 @@
-﻿namespace Stats.Common.Enums
+﻿using System;
+
+namespace Stats.Common.Enums
 {
+    [Flags]
     public enum PlayerPosition
     {
         PointGuard = 1 << 0,

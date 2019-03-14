@@ -11,7 +11,7 @@ namespace Stats.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Common.Enums.Competition Competition { get; set; }
-        public Common.Enums.JobType Type { get; set; }
+        public JobType Type { get; set; }
         [MaxLength(255)]
         public string Url { get; set; }
         [MaxLength(1000)]
