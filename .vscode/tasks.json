@@ -1,13 +1,23 @@
 {
     "version": "2.0.0",
     "tasks": [
+        // {
+        //     "label": "build",
+        //     "command": "dotnet",
+        //     "type": "process",
+        //     "args": [
+        //         "build",
+        //         "${workspaceFolder}/StatsFetcher/StatsFetcher.csproj"
+        //     ],
+        //     "problemMatcher": "$msCompile"
+        // },
         {
             "label": "build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/StatsFetcher/StatsFetcher.csproj"
+                "${workspaceFolder}/Stats.Api/Stats.Api.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

@@ -8,6 +8,7 @@ namespace Stats.Api.Models
     public class BaseModel
     {
         public DateTime Timestamp { get; set; }
+        public Guid? CreatedBy { get; set; }
 
         public BaseModel()
         {

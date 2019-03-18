@@ -7,6 +7,7 @@ using Stats.Fetcher.Jobs.ABA;
 using Stats.Fetcher.Library;
 using Stats.Fetcher.Library.Clients;
 using Stats.Fetcher.Library.Core;
+using Stats.Fetcher.Library.DiInjection;
 
 namespace Stats.Fetcher
 {
@@ -38,7 +39,8 @@ namespace Stats.Fetcher
                     services.AddTransient<ICompetition, Competition>();
                     services.AddTransient<ICompetitionFactory, CompetitionFactory>();
                     services.AddTransient<ISynchronizer, Synchronizer>();
-                    services.AddTransient<Rounds, Rounds>();
+                    
+                    Scanner.Scan(services);
 
                 })
                 .ConfigureLogging((hostingContext, logging) =>

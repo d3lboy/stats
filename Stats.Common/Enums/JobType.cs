@@ -2,6 +2,7 @@
 {
     public enum JobType
     {
-        Rounds = 1
+        Rounds = 1,
+        Round = 2
     }
 }

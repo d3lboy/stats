@@ -17,6 +17,7 @@ namespace Stats.Fetcher.Library.Core
     {
         private readonly ILogger<JobBase> logger;
         private readonly IApiClient client;
+        protected JobDto JobDto;
 
         protected JobBase(ILogger<JobBase> logger, IOptions<AppConfig> appConfig, IApiClient client)
         {
@@ -26,6 +27,8 @@ namespace Stats.Fetcher.Library.Core
 
         public async Task<bool> ProcessJob(JobDto dto)
         {
+            JobDto = dto;
+
             var page = await new Browser().GetPage(dto.Url);
 
             if (!IsLoadedCorrectly(page)) return false;
@@ -43,12 +46,9 @@ namespace Stats.Fetcher.Library.Core
 
             CreateAdditionalJobs(page, out var jobs);
 
-            if (jobs.Any())
-            {
-                return await client.Post<bool>(jobs.First().Source, jobs);
-            }
+            if (!jobs.Any()) return true;
 
-            return true;
+            return await client.Post<bool>(jobs.First().Source, jobs);
         }
 
         public abstract bool IsLoadedCorrectly(WebPage page);

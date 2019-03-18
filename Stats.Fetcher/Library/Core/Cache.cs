@@ -73,8 +73,10 @@ namespace Stats.Fetcher.Library.Core
 
                     logger.LogDebug($"{job}");
 
-                    if (job.State == JobState.Finished || job.State == JobState.Error)
-                        JobFinished?.Invoke(job);
+                    if (job.State != JobState.Finished && job.State != JobState.Error) return;
+
+                    JobFinished?.Invoke(job);
+                    Clean();
                 }
                 else
                 {
@@ -87,5 +89,20 @@ namespace Stats.Fetcher.Library.Core
             }
         }
 
+        private void Clean()
+        {
+            List<JobDto> removedJobs = new List<JobDto>();
+            jobs.Values.Where(x => x.State == JobState.Error || x.State == JobState.Finished)
+                .Select(x => x.Id).ToList().ForEach(id =>
+                {
+                    if (jobs.TryRemove(id, out var job))
+                    {
+                        removedJobs.Add(job);
+                    }
+                });
+
+            if(removedJobs.Any())
+                logger.LogDebug($"Cleaned {removedJobs.Count} job(s)");
+        }
     }
 }

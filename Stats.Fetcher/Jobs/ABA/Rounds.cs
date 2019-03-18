@@ -9,10 +9,11 @@ using Stats.Common.Dto;
 using Stats.Common.Enums;
 using Stats.Fetcher.Library.Clients;
 using Stats.Fetcher.Library.Core;
+using Competition = Stats.Common.Enums.Competition;
 
 namespace Stats.Fetcher.Jobs.ABA
 {
-    [JobFlags(Common.Enums.Competition.Aba, JobType.Rounds)]
+    [JobFlags(Competition.Aba, JobType.Rounds)]
     public class Rounds : JobBase
     {
         private readonly ILogger<Rounds> logger;
@@ -56,7 +57,28 @@ namespace Stats.Fetcher.Jobs.ABA
 
         public override bool CreateAdditionalJobs(WebPage page, out List<BaseDto> dtos)
         {
-            dtos = new List<BaseDto>() {  };
+            var jobs = new List<BaseDto>() {  };
+
+            page.Html.CssSelect($"#accordion").CssSelect(".panel-default>.panel-heading").ToList().ForEach(x =>
+            {
+                string txt = x.Id.Replace("heading_", "");
+
+                int num = int.Parse(txt);
+                jobs.Add(new JobDto
+                {
+                    Source = "jobs/bulkinsert",
+                    Id = Guid.NewGuid(),
+                    State = JobState.New,
+                    Competition = Competition.Aba,
+                    ScheduledDate = DateTime.Now,
+                    CreatedBy = JobDto.Id,
+                    Args = $"{num}",
+                    Type = JobType.Round,
+                    Url = "https://www.aba-liga.com/calendar.php"
+                });
+            });
+
+            dtos = jobs;
 
             return true;
         }

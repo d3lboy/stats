@@ -67,6 +67,25 @@ namespace Stats.Api.Business
             return job.Id;
         }
 
+        public async Task<bool> BulkInsert(List<JobDto> jobs)
+        {
+            var creator = jobs.First().Id;          
+            var existingJobs = await context.Jobs.Where(x => x.CreatedBy == creator).Select(x=>x.Id).ToListAsync();
+
+            jobs.ForEach(dto =>
+            {
+                if (existingJobs.Contains(dto.Id)) return;
+
+                var job = Map(dto);
+                job.Id = Guid.NewGuid();
+                context.Jobs.Add(job);
+            });
+
+            await context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<int> UpdateJob(JobDto jobDto)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == jobDto.Id);
@@ -106,7 +125,8 @@ namespace Stats.Api.Business
                 Id = job.Id,
                 Url = job.Url,
                 Competition = job.Competition,
-                Type = job.Type
+                Type = job.Type,
+                CreatedBy = job.CreatedBy
             };
         }
 
@@ -121,7 +141,8 @@ namespace Stats.Api.Business
                 Id = job.Id,
                 Url = job.Url,
                 Competition = job.Competition,
-                Type = job.Type
+                Type = job.Type,
+                CreatedBy = job.CreatedBy
             };
         }
     }

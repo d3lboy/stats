@@ -86,7 +86,7 @@ namespace Stats.Api.Controllers
 
         // POST: api/JobDtoes
         [HttpPost]
-        public async Task<ActionResult<JobDto>> Post(JobDto jobDto)
+        public async Task<ActionResult<JobDto>> Post([FromBody] JobDto jobDto)
         {
             try
             {
@@ -98,6 +98,21 @@ namespace Stats.Api.Controllers
             }
 
             return Ok(jobDto.Id);
+        }
+
+        [HttpPost]
+        [Route("bulkinsert")]
+        public async Task<ActionResult<bool>> BulkInsert([FromBody] List<JobDto> jobs)
+        {
+            try
+            {
+                bool result = await jobManager.BulkInsert(jobs);
+                return Ok(result);
+            }
+            catch (ItemAlreadyExistException ex)
+            {
+                return Conflict(ex);
+            }
         }
 
         // DELETE: api/JobDtoes/5
