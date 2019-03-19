@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Stats.Api.Business.Exceptions;
 using Stats.Api.Models;
@@ -9,20 +10,22 @@ using Stats.Common.Dto;
 
 namespace Stats.Api.Business
 {
-    public class RoundManager
+    public class RoundManager : IRoundManager
     {
         private readonly StatsDbContext context;
+        private readonly IMapper mapper;
 
-        public RoundManager(StatsDbContext context)
+        public RoundManager(StatsDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public async Task<List<RoundDto>> GetRounds(Guid season)
         {
             var rounds = await context.Rounds.Where(x => x.SeasonId == season).ToListAsync();
 
-            return rounds.Any() ? rounds.Select(Map).ToList() : default;
+            return rounds.Any() ? rounds.Select(mapper.Map<RoundDto>).ToList() : default;
         }
 
         public async Task<RoundDto> GetRound(Guid id)
@@ -34,7 +37,7 @@ namespace Stats.Api.Business
                 throw new ItemNotFoundException();
             }
 
-            return Map(round);
+            return mapper.Map<RoundDto>(round);
         }
 
         public async Task<Guid> SaveNewRound(RoundDto dto)
@@ -45,7 +48,7 @@ namespace Stats.Api.Business
                 throw new ItemAlreadyExistException($"Round {round.Id} not found!");
             }
 
-            round = Map(dto);
+            round = mapper.Map<Round>(dto);
             round.Id = Guid.NewGuid();
             context.Rounds.Add(round);
 
@@ -67,7 +70,7 @@ namespace Stats.Api.Business
             {
                 if (rounds.All(x => x.RoundNumber != dto.RoundNumber))
                 {
-                    context.Rounds.Add(Map(dto));
+                    context.Rounds.Add(mapper.Map<Round>(dto));
                 }
             });
 
@@ -95,30 +98,6 @@ namespace Stats.Api.Business
 
             context.Rounds.Remove(round);
             return await context.SaveChangesAsync();
-        }
-
-        private RoundDto Map(Round round)
-        {
-            return new RoundDto
-            {
-                Id = round.Id,
-                RoundNumber = round.RoundNumber,
-                RoundType = round.RoundType,
-                Season = round.SeasonId,
-                Timestamp = round.Timestamp
-            };
-        }
-
-        private Round Map(RoundDto round)
-        {
-            return new Round
-            {
-                Id = round.Id,
-                RoundNumber = round.RoundNumber,
-                RoundType = round.RoundType,
-                SeasonId = round.Season,
-                Timestamp = DateTime.Now
-            };
         }
     }
 }

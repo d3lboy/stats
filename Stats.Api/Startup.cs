@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Stats.Api.Business;
 using Stats.Api.Models;
 
 namespace Stats.Api
@@ -33,6 +34,9 @@ namespace Stats.Api
                 .AddDbContext<StatsDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("StatsDb")))
                 .BuildServiceProvider();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddTransient<IJobManager, JobManager>();
+            services.AddTransient<IRoundManager, RoundManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

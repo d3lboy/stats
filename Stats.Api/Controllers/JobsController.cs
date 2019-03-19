@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Stats.Api.Business;
 using Stats.Api.Business.Exceptions;
-using Stats.Api.Models;
 using Stats.Common.Dto;
 
 namespace Stats.Api.Controllers
@@ -14,11 +13,11 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class JobsController : ControllerBase
     {
-        private readonly JobManager jobManager;
+        private readonly IJobManager jobManager;
 
-        public JobsController(StatsDbContext context)
+        public JobsController(IJobManager jobManager)
         {
-            jobManager = new JobManager(context);
+            this.jobManager = jobManager;
         }
 
         [HttpGet]

@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Stats.Api.Business.Exceptions;
 using Stats.Api.Models;
 using Stats.Common.Dto;
 using Stats.Common.Enums;
-using Competition = Stats.Common.Enums.Competition;
 
 namespace Stats.Api.Business
 {
-    public class JobManager
+    public class JobManager : IJobManager
     {
         private readonly StatsDbContext context;
+        private readonly IMapper mapper;
 
-        public JobManager(StatsDbContext context)
+        public JobManager(StatsDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public async Task<List<JobDto>> GetJobs()
@@ -26,7 +27,7 @@ namespace Stats.Api.Business
             var jobs = await context.Jobs.Where(x => x.State == JobState.New)
                 .OrderBy(x => x.ScheduledDate).Take(10).ToListAsync();
 
-            return jobs.Any() ? jobs.Select(Map).ToList() : new List<JobDto>();
+            return jobs.Any() ? jobs.Select(mapper.Map<JobDto>).ToList() : new List<JobDto>();
         }
 
         public async Task<List<JobDto>> GetJobs(JobFilter filter)
@@ -35,7 +36,7 @@ namespace Stats.Api.Business
                         x.State == JobState.New)
                     .OrderBy(x => x.ScheduledDate).Take(100).ToListAsync();
 
-            return result.Any() ? result.Select(Map).ToList() : new List<JobDto>();
+            return result.Any() ? result.Select(mapper.Map<JobDto>).ToList() : new List<JobDto>();
         }
 
         public async Task<JobDto> GetJob(Guid id)
@@ -47,7 +48,7 @@ namespace Stats.Api.Business
                 throw new ItemNotFoundException();
             }
 
-            return Map(job);
+            return mapper.Map<JobDto>(job);
         }
 
         public async Task<Guid> SaveNewJob(JobDto jobDto)
@@ -58,7 +59,7 @@ namespace Stats.Api.Business
                 throw new ItemAlreadyExistException($"Job {jobDto.Id} not found!");
             }
 
-            job = Map(jobDto);
+            job = mapper.Map<Job>(jobDto);
             job.Id = Guid.NewGuid();
             context.Jobs.Add(job);
 
@@ -76,7 +77,7 @@ namespace Stats.Api.Business
             {
                 if (existingJobs.Contains(dto.Id)) return;
 
-                var job = Map(dto);
+                var job = mapper.Map<Job>(dto);
                 job.Id = Guid.NewGuid();
                 context.Jobs.Add(job);
             });
@@ -112,38 +113,6 @@ namespace Stats.Api.Business
 
             context.Jobs.Remove(job);
             return await context.SaveChangesAsync();
-        }
-
-        private JobDto Map(Job job)
-        {
-            return new JobDto
-            {
-                State = job.State,
-                ScheduledDate = job.ScheduledDate,
-                Args = job.Args,
-                ExecutedDate = job.ExecutedDate,
-                Id = job.Id,
-                Url = job.Url,
-                Competition = job.Competition,
-                Type = job.Type,
-                CreatedBy = job.CreatedBy
-            };
-        }
-
-        private Job Map(JobDto job)
-        {
-            return new Job
-            {
-                State = job.State,
-                ScheduledDate = job.ScheduledDate,
-                Args = job.Args,
-                ExecutedDate = job.ExecutedDate,
-                Id = job.Id,
-                Url = job.Url,
-                Competition = job.Competition,
-                Type = job.Type,
-                CreatedBy = job.CreatedBy
-            };
         }
     }
 }

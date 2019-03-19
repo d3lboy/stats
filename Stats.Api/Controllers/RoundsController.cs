@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Remotion.Linq.Utilities;
 using Stats.Api.Business;
 using Stats.Api.Business.Exceptions;
-using Stats.Api.Models;
 using Stats.Common.Dto;
-using Stats.Common.Enums;
 
 namespace Stats.Api.Controllers
 {
@@ -17,10 +12,10 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class RoundsController : ControllerBase
     {
-        private readonly RoundManager roundManager;
-        public RoundsController(StatsDbContext context)
+        private readonly IRoundManager roundManager;
+        public RoundsController(IRoundManager roundManager)
         {
-            roundManager = new RoundManager(context);
+            this.roundManager = roundManager;
         }
         // GET: api/Rounds
         //[HttpGet]
@@ -48,7 +43,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                int result = await roundManager.SaveNewRounds(rounds);
+                await roundManager.SaveNewRounds(rounds);
                 return Ok(true);
             }
             catch (Exception ex)
