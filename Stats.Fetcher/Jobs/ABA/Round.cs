@@ -14,9 +14,9 @@ namespace Stats.Fetcher.Jobs.ABA
     [JobFlags(Common.Enums.Competition.Aba, JobType.Round)]
     public class Round:JobBase
     {
-        private readonly ILogger<JobBase> logger;
+        private readonly ILogger<Round> logger;
 
-        public Round(ILogger<JobBase> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, appConfig, client)
+        public Round(ILogger<Round> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, appConfig, client)
         {
             this.logger = logger;
         }
