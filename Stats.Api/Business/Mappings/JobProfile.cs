@@ -8,8 +8,7 @@ namespace Stats.Api.Business.Mappings
     {
         public JobProfile()
         {
-            CreateMap<JobDto, Job>();
-            CreateMap<Job, JobDto>();
+            CreateMap<JobDto, Job>().ReverseMap();
         }
     }
 }

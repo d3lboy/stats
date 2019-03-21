@@ -11,7 +11,7 @@ namespace Stats.Api.Models
         public Guid Id { get; set; }
         public int RoundNumber { get; set; }
         public RoundType RoundType { get; set; }
-        public Season Season { get; set; }
+        private Season Season { get; set; }
         [ForeignKey("Season")]
         public Guid SeasonId { get; set; }
     }

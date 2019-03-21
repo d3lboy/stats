@@ -10,7 +10,7 @@ namespace Stats.Api.Models
         public Guid Id { get; set; }
         [MaxLength(20)]
         public string Name { get; set; }
-        public Competition Competition { get; set; }
+        private Competition Competition { get; set; }
         [ForeignKey("Competition")]
         public Stats.Common.Enums.Competition CompetitionId { get; set; }
     }

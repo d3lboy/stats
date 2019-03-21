@@ -8,8 +8,9 @@ namespace Stats.Api.Business.Mappings
     {
         public RoundProfile()
         {
-            CreateMap<RoundDto, Round>();
-            CreateMap<Round, RoundDto>();
+            CreateMap<RoundDto, Round>()
+                .ForMember(x=>x.SeasonId,
+                    o=>o.MapFrom(s=>s.Season)).ReverseMap();
         }
     }
 }

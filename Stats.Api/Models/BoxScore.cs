@@ -8,11 +8,14 @@ namespace Stats.Api.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
+        private Player Player { get; set; }
+        private Game Game { get; set; }
+
         public Guid Id { get; set; }
-        public Player Player { get; set; }
         [ForeignKey("Player")]
         public Guid PlayerId { get; set; }
-        public Game Game { get; set; }
+        
         [ForeignKey("Game")]
         public Guid GameId { get; set; }
 

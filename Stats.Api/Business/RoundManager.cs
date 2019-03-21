@@ -64,17 +64,28 @@ namespace Stats.Api.Business
             if (!seasonId.HasValue)
                 return default;
 
-            var rounds = await context.Rounds.Where(x => x.SeasonId == seasonId).ToListAsync();
-
-            dtos.ForEach(dto =>
+            try
             {
-                if (rounds.All(x => x.RoundNumber != dto.RoundNumber))
-                {
-                    context.Rounds.Add(mapper.Map<Round>(dto));
-                }
-            });
+                var rounds = await context.Rounds.Where(x => x.SeasonId == seasonId).ToListAsync();
 
-            return await context.SaveChangesAsync();
+                dtos.ForEach(dto =>
+                {
+                    if (rounds.All(x => x.RoundNumber != dto.RoundNumber))
+                    {
+                        var round = mapper.Map<Round>(dto);
+                        context.Rounds.Add(round);
+                    }
+                });
+
+                return await context.SaveChangesAsync();
+            }
+            catch (System.Exception e)
+            {
+                
+                return default;
+            }
+            
+            
         }
 
         public async Task<int> UpdateRound(RoundDto dto)

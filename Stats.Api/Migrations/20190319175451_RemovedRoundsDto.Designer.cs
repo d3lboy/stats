@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Stats.Api.Models;
@@ -9,9 +10,10 @@ using Stats.Api.Models;
 namespace Stats.Api.Migrations
 {
     [DbContext(typeof(StatsDbContext))]
-    partial class StatsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190319175451_RemovedRoundsDto")]
+    partial class RemovedRoundsDto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,6 +70,10 @@ namespace Stats.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PlayerId");
+
                     b.ToTable("BoxScores");
                 });
 
@@ -109,6 +115,10 @@ namespace Stats.Api.Migrations
                     b.Property<Guid>("VisitorTeamId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HomeTeamId");
+
+                    b.HasIndex("VisitorTeamId");
 
                     b.ToTable("Games");
                 });
@@ -160,6 +170,8 @@ namespace Stats.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GameId");
+
                     b.ToTable("Periods");
                 });
 
@@ -206,6 +218,8 @@ namespace Stats.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SeasonId");
+
                     b.ToTable("Rounds");
                 });
 
@@ -224,6 +238,8 @@ namespace Stats.Api.Migrations
                     b.Property<DateTime>("Timestamp");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompetitionId");
 
                     b.ToTable("Seasons");
                 });
@@ -251,6 +267,56 @@ namespace Stats.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.BoxScore", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Stats.Api.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.Game", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Team", "HomeTeam")
+                        .WithMany()
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Stats.Api.Models.Team", "VisitorTeam")
+                        .WithMany()
+                        .HasForeignKey("VisitorTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.Period", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.Round", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Season", "Season")
+                        .WithMany()
+                        .HasForeignKey("SeasonId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Stats.Api.Models.Season", b =>
+                {
+                    b.HasOne("Stats.Api.Models.Competition", "Competition")
+                        .WithMany()
+                        .HasForeignKey("CompetitionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

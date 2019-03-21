@@ -18,7 +18,6 @@ namespace Stats.Api.Models
         public DbSet<Team> Teams { get; set; }
         public DbSet<Period> Periods { get; set; }
         public DbSet<BoxScore> BoxScores { get; set; }
-        public DbSet<RoundDto> RoundDto { get; set; }
         public DbSet<Job> Jobs { get; set; }
     }
 }
