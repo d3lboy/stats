@@ -15,5 +15,9 @@ namespace Stats.Fetcher.Library.Core
         int Count { get; }
         void Add(List<JobDto> newJobs);
         void Update(JobDto dto);
+        void Finish(JobDto dto);
+        void Cancel(JobDto dto);
+        void Reschedule(Guid id, TimeSpan interval);
+        void Reschedule(Guid id);
     }
 }

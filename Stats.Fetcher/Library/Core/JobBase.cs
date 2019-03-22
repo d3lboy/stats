@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -35,14 +36,16 @@ namespace Stats.Fetcher.Library.Core
 
             ParseArguments(dto.Args);
 
-            if (!ParseHtml(page, out var items)) return false;
-
-            if (!items.Any()) return false;
+            if (!ParseHtml(page, out var items) || !items.Any())
+            {
+                return false;
+            }
 
             var item = items.First();
-            bool result = await client.Post<bool>(item.Source, items);
-
-            if (!result) return false;
+            if(!await client.Post<bool>(item.Source, items))
+            {
+                return false;
+            }
 
             CreateAdditionalJobs(page, out var jobs);
 
@@ -55,6 +58,8 @@ namespace Stats.Fetcher.Library.Core
         public abstract bool ParseHtml(WebPage page, out List<BaseDto> result);
         public abstract bool CreateAdditionalJobs(WebPage page, out List<BaseDto> dtos);
         public abstract void ParseArguments(string args);
+
+        public virtual int? RescheduleInterval { get; set; }
 
         private void ReleaseUnmanagedResources()
         {

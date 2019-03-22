@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace Stats.Common.Enums
+﻿namespace Stats.Common.Enums
 {
-    [Flags]
     public enum JobState
     {
         New = 1,

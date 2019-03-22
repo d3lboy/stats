@@ -21,7 +21,8 @@ namespace Stats.Common.Dto
 
         public override string ToString()
         {
-            return $"Competition: {Enum.GetName(typeof(Competition), Competition)}, Type: {Type}, Id:{Id}, State: {Enum.GetName(typeof(JobState), State)}";
+            return $"Competition: {Enum.GetName(typeof(Competition), Competition)}, Type: {Type}, Id:{Id}, " +
+                   $"State: {Enum.GetName(typeof(JobState), State)}, Scheduled: {ScheduledDate}";
         }
     }
 }

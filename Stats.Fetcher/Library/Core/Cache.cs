@@ -2,8 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Stats.Common.Dto;
@@ -37,11 +35,14 @@ namespace Stats.Fetcher.Library.Core
 
         public JobDto GetJobCandidate(Common.Enums.Competition competition)
         {
-            var competitionJobs = jobs.Values.Where(x => x.Competition == competition && x.State != JobState.Finished)
+            var competitionJobs = jobs.Values.Where(x => 
+                                                        x.Competition == competition 
+                                                        && x.ScheduledDate < DateTime.Now 
+                                                        && x.State!=JobState.Error && x.State != JobState.Finished)
                 .ToList();
             return competitionJobs.Any(x => x.State == JobState.InProgress) ?
                 null :
-                competitionJobs.OrderByDescending(x => x.ScheduledDate).FirstOrDefault();
+                competitionJobs.OrderBy(x => x.ScheduledDate).FirstOrDefault();
         }
 
         public int Count => jobs.Count;
@@ -57,7 +58,7 @@ namespace Stats.Fetcher.Library.Core
                 addedJobs.Add(job);
             });
 
-            if(addedJobs.Any())
+            if (addedJobs.Any())
                 JobsAdded?.Invoke(addedJobs);
         }
 
@@ -89,6 +90,33 @@ namespace Stats.Fetcher.Library.Core
             }
         }
 
+        public void Finish(JobDto dto)
+        {
+            dto.State = JobState.Finished;
+            Update(dto);
+        }
+
+        public void Cancel(JobDto dto)
+        {
+            dto.State = JobState.Error;
+            Update(dto);
+        }
+
+        public void Reschedule(Guid id, TimeSpan interval)
+        {
+            if (!jobs.TryGetValue(id, out var job)) return;
+
+            job.State = JobState.New;
+            job.ScheduledDate = DateTime.Now.Add(interval);
+
+            JobUpdated?.Invoke(job);
+        }
+
+        public void Reschedule(Guid id)
+        {
+            Reschedule(id, TimeSpan.FromSeconds(appConfig.Value.DefaultRescheduleDelay));
+        }
+
         private void Clean()
         {
             List<JobDto> removedJobs = new List<JobDto>();
@@ -101,7 +129,7 @@ namespace Stats.Fetcher.Library.Core
                     }
                 });
 
-            if(removedJobs.Any())
+            if (removedJobs.Any())
                 logger.LogDebug($"Cleaned {removedJobs.Count} job(s)");
         }
     }

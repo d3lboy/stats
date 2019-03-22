@@ -6,5 +6,6 @@
         public string ApiUrl { get; set; }
         public int MinJobsInCache { get; set; }
         public int CheckFrequency { get; set; }
+        public int DefaultRescheduleDelay { get; set; }
     }
 }
