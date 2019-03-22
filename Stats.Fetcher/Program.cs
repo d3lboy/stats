@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 using Stats.Fetcher.Jobs.ABA;
 using Stats.Fetcher.Library;
 using Stats.Fetcher.Library.Clients;
@@ -15,6 +19,13 @@ namespace Stats.Fetcher
     {
         public static async Task Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(theme: SystemConsoleTheme.Colored)
+                .CreateLogger();
+
             var builder = new HostBuilder()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
@@ -31,7 +42,7 @@ namespace Stats.Fetcher
                     services.AddOptions();
                     services.Configure<AppConfig>(hostContext.Configuration.GetSection("AppConfig"));
 
-                    services.AddSingleton<IHostedService, JobManager>();                   
+                    services.AddSingleton<IHostedService, JobManager>();
                     services.AddSingleton<ICache, Cache>();
                     services.AddTransient<Browser, Browser>();
                     services.AddTransient<IApiClient, ApiClient>();
@@ -39,15 +50,11 @@ namespace Stats.Fetcher
                     services.AddTransient<ICompetition, Competition>();
                     services.AddTransient<ICompetitionFactory, CompetitionFactory>();
                     services.AddTransient<ISynchronizer, Synchronizer>();
-                    
+
                     Scanner.Scan(services);
 
                 })
-                .ConfigureLogging((hostingContext, logging) =>
-                {
-                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                    logging.AddConsole();
-                });
+                .UseSerilog();
 
             await builder.RunConsoleAsync();
         }
