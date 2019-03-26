@@ -19,5 +19,6 @@ namespace Stats.Api.Models
         public DateTime ScheduledDate { get; set; }
         public DateTime ExecutedDate { get; set; }
         public JobState State { get; set; }
+        public Guid? Parent { get; set; }
     }
 }

@@ -10,18 +10,18 @@ using Stats.Common.Dto;
 
 namespace Stats.Api.Business
 {
-    public class RoundManager : IRoundManager
+    public class Rounds : IRounds
     {
         private readonly StatsDbContext context;
         private readonly IMapper mapper;
 
-        public RoundManager(StatsDbContext context, IMapper mapper)
+        public Rounds(StatsDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<List<RoundDto>> GetRounds(Guid season)
+        public async Task<List<RoundDto>> Get(Guid season)
         {
             var rounds = await context.Rounds.Where(x => x.SeasonId == season).ToListAsync();
 
@@ -40,7 +40,7 @@ namespace Stats.Api.Business
             return mapper.Map<RoundDto>(round);
         }
 
-        public async Task<Guid> SaveNewRound(RoundDto dto)
+        public async Task<Guid> Add(RoundDto dto)
         {
             var round = await context.Rounds.SingleOrDefaultAsync(x => x.Id == dto.Id);
             if (round != null)
@@ -57,7 +57,7 @@ namespace Stats.Api.Business
             return round.Id;
         }
 
-        public async Task<int> SaveNewRounds(List<RoundDto> dtos)
+        public async Task<int> Add(List<RoundDto> dtos)
         {
             Guid? seasonId = dtos.FirstOrDefault()?.Season;
 
@@ -79,16 +79,14 @@ namespace Stats.Api.Business
 
                 return await context.SaveChangesAsync();
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
-                
+
                 return default;
             }
-            
-            
         }
 
-        public async Task<int> UpdateRound(RoundDto dto)
+        public async Task<int> Update(RoundDto dto)
         {
             var round = await context.Rounds.SingleOrDefaultAsync(x => x.Id == dto.Id);
             if (round == null)
@@ -99,7 +97,7 @@ namespace Stats.Api.Business
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteRound(Guid id)
+        public async Task<int> Delete(Guid id)
         {
             var round = await context.Rounds.SingleOrDefaultAsync(x => x.Id == id);
             if (round == null)

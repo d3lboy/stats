@@ -13,6 +13,7 @@ namespace Stats.Common.Dto
         public DateTime ExecutedDate { get; set; }
         public JobState State { get; set; }
         public JobType Type { get; set; }
+        public Guid? Parent { get; set; }
 
         public JobDto()
         {

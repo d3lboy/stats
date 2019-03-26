@@ -46,7 +46,7 @@ namespace Stats.Fetcher.Jobs.ABA
                     RoundNumber = num,
                     RoundType = RoundType.RegularSeason,
                     Id = Guid.NewGuid(),
-                    Timestamp = DateTime.Now
+                    Timestamp = DateTime.Now,
                 });
             });
 
@@ -74,7 +74,8 @@ namespace Stats.Fetcher.Jobs.ABA
                     CreatedBy = JobDto.Id,
                     Args = $"{num}",
                     Type = JobType.Round,
-                    Url = "https://www.aba-liga.com/calendar.php"
+                    Url = "https://www.aba-liga.com/calendar.php",
+                    Parent = seasonId
                 });
             });
 

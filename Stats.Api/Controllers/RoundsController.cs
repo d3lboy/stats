@@ -12,16 +12,16 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class RoundsController : ControllerBase
     {
-        private readonly IRoundManager roundManager;
-        public RoundsController(IRoundManager roundManager)
+        private readonly IRounds roundsRepository;
+        public RoundsController(IRounds roundsRepository)
         {
-            this.roundManager = roundManager;
+            this.roundsRepository = roundsRepository;
         }
         // GET: api/Rounds
         //[HttpGet]
         //public async Task<IEnumerable<RoundDto>> Get()
         //{
-        //    return roundManager.GetRounds()
+        //    return roundsRepository.GetRounds()
         //}
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Stats.Api.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<IEnumerable<RoundDto>> Get(Guid id)
         {
-            return await roundManager.GetRounds(id);
+            return await roundsRepository.Get(id);
         }
 
         // POST: api/Rounds
@@ -43,7 +43,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                await roundManager.SaveNewRounds(rounds);
+                await roundsRepository.Add(rounds);
                 return Ok(true);
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace Stats.Api.Controllers
                 if(id != dto.Id)
                     return BadRequest();
 
-                int result = await roundManager.UpdateRound(dto);
+                int result = await roundsRepository.Update(dto);
                 return Ok(result);
             }
             catch(ItemNotFoundException)
@@ -76,7 +76,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                int result = await roundManager.DeleteRound(id);
+                int result = await roundsRepository.Delete(id);
                 return Ok(result);
             }
             catch (ItemNotFoundException)

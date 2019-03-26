@@ -11,18 +11,18 @@ using Stats.Common.Enums;
 
 namespace Stats.Api.Business
 {
-    public class JobManager : IJobManager
+    public class Jobs : IJobs
     {
         private readonly StatsDbContext context;
         private readonly IMapper mapper;
 
-        public JobManager(StatsDbContext context, IMapper mapper)
+        public Jobs(StatsDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<List<JobDto>> GetJobs()
+        public async Task<List<JobDto>> Get()
         {
             var jobs = await context.Jobs.Where(x => x.State == JobState.New)
                 .OrderBy(x => x.ScheduledDate).Take(10).ToListAsync();
@@ -30,7 +30,7 @@ namespace Stats.Api.Business
             return jobs.Any() ? jobs.Select(mapper.Map<JobDto>).ToList() : new List<JobDto>();
         }
 
-        public async Task<List<JobDto>> GetJobs(JobFilter filter)
+        public async Task<List<JobDto>> Get(JobFilter filter)
         {
             var result = await context.Jobs.Where(x =>
                         x.State == JobState.New)
@@ -39,7 +39,7 @@ namespace Stats.Api.Business
             return result.Any() ? result.Select(mapper.Map<JobDto>).ToList() : new List<JobDto>();
         }
 
-        public async Task<JobDto> GetJob(Guid id)
+        public async Task<JobDto> Get(Guid id)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == id);
 
@@ -51,7 +51,7 @@ namespace Stats.Api.Business
             return mapper.Map<JobDto>(job);
         }
 
-        public async Task<Guid> SaveNewJob(JobDto jobDto)
+        public async Task<Guid> Add(JobDto jobDto)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == jobDto.Id);
             if (job != null)
@@ -68,14 +68,14 @@ namespace Stats.Api.Business
             return job.Id;
         }
 
-        public async Task<bool> BulkInsert(List<JobDto> jobs)
+        public async Task<bool> Add(List<JobDto> jobs)
         {
-            var creator = jobs.First().Id;          
-            var existingJobs = await context.Jobs.Where(x => x.CreatedBy == creator).Select(x=>x.Id).ToListAsync();
+            var parent = jobs.First().Id;          
+            var existingJobs = await context.Jobs.Where(x => x.Parent == parent).Select(x=>x.Args).ToListAsync();
 
             jobs.ForEach(dto =>
             {
-                if (existingJobs.Contains(dto.Id)) return;
+                if (existingJobs.Contains(dto.Args)) return;
 
                 var job = mapper.Map<Job>(dto);
                 job.Id = Guid.NewGuid();
@@ -87,7 +87,7 @@ namespace Stats.Api.Business
             return true;
         }
 
-        public async Task<int> UpdateJob(JobDto jobDto)
+        public async Task<int> Update(JobDto jobDto)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == jobDto.Id);
             if (job == null)
@@ -103,7 +103,7 @@ namespace Stats.Api.Business
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteJob(Guid id)
+        public async Task<int> Delete(Guid id)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == id);
             if (job == null)
