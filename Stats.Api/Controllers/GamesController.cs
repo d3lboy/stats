@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Stats.Api.Business;
 using Stats.Api.Business.Exceptions;
 using Stats.Api.Business.Interfaces;
 using Stats.Common.Dto;
@@ -11,40 +10,33 @@ namespace Stats.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoundsController : ControllerBase
+    public class GamesController : ControllerBase
     {
-        private readonly IRounds roundsRepository;
-        public RoundsController(IRounds roundsRepository)
+        private readonly IGames games;
+        public GamesController(IGames games)
         {
-            this.roundsRepository = roundsRepository;
+            this.games = games;
         }
-        // GET: api/Rounds
-        //[HttpGet]
-        //public async Task<IEnumerable<RoundDto>> Get()
-        //{
-        //    return roundsRepository.GetRounds()
-        //}
-
+        
         /// <summary>
-        /// Get rounds from a season
+        /// Get items from a season
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        // GET: api/Rounds/5
         [HttpGet("{id}")]
-        public async Task<IEnumerable<RoundDto>> Get(Guid id)
+        public async Task<GameDto> Get(Guid id)
         {
-            return await roundsRepository.Get(id);
+            return await games.Get(id);
         }
 
         // POST: api/Rounds
 
         [HttpPost]
-        public async Task<ActionResult<bool>> Post([FromBody]List<RoundDto> rounds)
+        public async Task<ActionResult<bool>> Post([FromBody]List<GameDto> items)
         {
             try
             {
-                await roundsRepository.Add(rounds);
+                await games.Add(items);
                 return Ok(true);
             }
             catch (Exception ex)
@@ -55,14 +47,14 @@ namespace Stats.Api.Controllers
 
         // PUT: api/Rounds/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<int>> Put(Guid id, [FromBody] RoundDto dto)
+        public async Task<ActionResult<int>> Put(Guid id, [FromBody] GameDto dto)
         {
             try
             {
                 if(id != dto.Id)
                     return BadRequest();
 
-                int result = await roundsRepository.Update(dto);
+                int result = await games.Update(dto);
                 return Ok(result);
             }
             catch(ItemNotFoundException)
@@ -77,7 +69,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                int result = await roundsRepository.Delete(id);
+                int result = await games.Delete(id);
                 return Ok(result);
             }
             catch (ItemNotFoundException)

@@ -9,6 +9,9 @@ namespace Stats.Api.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        private Round Round { get; set; }
+        [ForeignKey("Round")]
+        public Guid RoundId { get; set; }
         private Team HomeTeam { get; set; }
         [ForeignKey("HomeTeam")]
         public Guid HomeTeamId { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 using Stats.Common.Dto;
@@ -17,7 +18,7 @@ namespace Stats.Fetcher.Jobs.ABA
     public class Rounds : JobBase
     {
         private readonly ILogger<Rounds> logger;
-        private Guid seasonId;
+        private Guid season;
 
         public Rounds(ILogger<Rounds> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, appConfig, client)
         {
@@ -26,9 +27,7 @@ namespace Stats.Fetcher.Jobs.ABA
 
         public override bool IsLoadedCorrectly(WebPage page)
         {
-            bool contentExist = page.Html.CssSelect("#main_content").Any();
-            logger.LogTrace($"Content exists {contentExist}");
-            return contentExist;
+            return page.Html.CssSelect("#main_content").Any();
         }
 
         public override bool ParseHtml(WebPage page, out List<BaseDto> result)
@@ -42,7 +41,7 @@ namespace Stats.Fetcher.Jobs.ABA
                 rounds.Add(new RoundDto
                 {
                     Source = "rounds",
-                    Season = seasonId,
+                    Season = season,
                     RoundNumber = num,
                     RoundType = RoundType.RegularSeason,
                     Id = Guid.NewGuid(),
@@ -62,8 +61,10 @@ namespace Stats.Fetcher.Jobs.ABA
             page.Html.CssSelect($"#accordion").CssSelect(".panel-default>.panel-heading").ToList().ForEach(x =>
             {
                 string txt = x.Id.Replace("heading_", "");
-
                 int num = int.Parse(txt);
+
+                Arguments["round"] = num;
+
                 jobs.Add(new JobDto
                 {
                     Source = "jobs/bulkinsert",
@@ -72,10 +73,10 @@ namespace Stats.Fetcher.Jobs.ABA
                     Competition = Competition.Aba,
                     ScheduledDate = DateTime.Now,
                     CreatedBy = JobDto.Id,
-                    Args = $"{num}",
+                    Args = JsonConvert.SerializeObject(Arguments),
                     Type = JobType.Round,
                     Url = "https://www.aba-liga.com/calendar.php",
-                    Parent = seasonId
+                    Parent = season
                 });
             });
 
@@ -84,9 +85,9 @@ namespace Stats.Fetcher.Jobs.ABA
             return true;
         }
 
-        public override void ParseArguments(string args)
+        public override bool ValidateArguments()
         {
-            seasonId = Guid.Parse(args);
+            return Arguments.ContainsKey("season") && Guid.TryParse(Arguments["season"].ToString(), out season);
         }
     }
 }

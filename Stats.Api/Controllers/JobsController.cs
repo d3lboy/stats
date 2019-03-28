@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Stats.Api.Business;
 using Stats.Api.Business.Exceptions;
+using Stats.Api.Business.Interfaces;
 using Stats.Common.Dto;
 
 namespace Stats.Api.Controllers

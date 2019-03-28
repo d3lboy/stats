@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Stats.Api.Business.Exceptions;
+using Stats.Api.Business.Interfaces;
 using Stats.Api.Models;
 using Stats.Common.Dto;
 using Stats.Common.Enums;

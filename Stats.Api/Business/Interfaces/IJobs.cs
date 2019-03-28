@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Stats.Common.Dto;
 
-namespace Stats.Api.Business
+namespace Stats.Api.Business.Interfaces
 {
     public interface IJobs
     {

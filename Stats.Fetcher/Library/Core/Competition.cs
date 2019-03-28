@@ -71,7 +71,6 @@ namespace Stats.Fetcher.Library.Core
             }
             
             currentJob.Dispose();
-            currentJob = null;
         }
     }
 }

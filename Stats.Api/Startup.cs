@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Stats.Api.Business;
+using Stats.Api.Business.Interfaces;
 using Stats.Api.Models;
 
 namespace Stats.Api
