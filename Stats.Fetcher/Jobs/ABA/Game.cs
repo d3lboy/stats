@@ -16,7 +16,7 @@ namespace Stats.Fetcher.Jobs.ABA
     {
         private readonly ILogger<Game> logger;
 
-        public Game(ILogger<Game> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, appConfig, client)
+        public Game(ILogger<Game> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, client)
         {
             this.logger = logger;
         }

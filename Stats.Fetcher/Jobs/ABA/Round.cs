@@ -22,7 +22,7 @@ namespace Stats.Fetcher.Jobs.ABA
     {
         private readonly ILogger<Round> logger;
 
-        public Round(ILogger<Round> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, appConfig, client)
+        public Round(ILogger<Round> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, client)
         {
             this.logger = logger;
         }

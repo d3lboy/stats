@@ -20,7 +20,7 @@ namespace Stats.Fetcher.Jobs.ABA
         private readonly ILogger<Rounds> logger;
         private Guid season;
 
-        public Rounds(ILogger<Rounds> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, appConfig, client)
+        public Rounds(ILogger<Rounds> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, client)
         {
             this.logger = logger;
         }

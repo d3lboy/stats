@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Stats.Common.Dto;
-using Stats.Common.Enums;
-using Stats.Fetcher.Library.Clients;
 using Stats.Fetcher.Library.Core;
 using Competition = Stats.Common.Enums.Competition;
 

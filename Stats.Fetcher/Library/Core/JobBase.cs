@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ScrapySharp.Network;
 using Stats.Common.Dto;
@@ -23,7 +21,7 @@ namespace Stats.Fetcher.Library.Core
         public Dictionary<string, object> Arguments { get; set; }
     
 
-        protected JobBase(ILogger<JobBase> logger, IOptions<AppConfig> appConfig, IApiClient client)
+        protected JobBase(ILogger<JobBase> logger, IApiClient client)
         {
             this.logger = logger;
             this.client = client;
