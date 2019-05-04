@@ -7,6 +7,7 @@
         Croatia,
         Montenegro,
         Slovenia,
-        Macedonia
+        Macedonia,
+        Yugoslavia
     }
 }
