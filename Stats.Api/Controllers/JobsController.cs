@@ -13,17 +13,17 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class JobsController : ControllerBase
     {
-        private readonly IJobs jobRepository;
+        private readonly IJobService service;
 
-        public JobsController(IJobs jobRepository)
+        public JobsController(IJobService service)
         {
-            this.jobRepository = jobRepository;
+            this.service = service;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<JobDto>>> Get()
         {
-            var jobs = await jobRepository.Get();
+            var jobs = await service.Get();
 
             if (!jobs.Any())
             {
@@ -39,7 +39,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                var job = await jobRepository.Get(id);
+                var job = await service.Get(id);
                 return job;
             }
             catch (ItemNotFoundException)
@@ -54,7 +54,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                return await jobRepository.Get(filter);
+                return await service.Get(filter);
             }
             catch (ItemNotFoundException)
             {
@@ -73,7 +73,7 @@ namespace Stats.Api.Controllers
 
             try
             {
-                await jobRepository.Update(jobDto);
+                await service.Update(jobDto);
             }
             catch (ItemNotFoundException)
             {
@@ -89,7 +89,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                jobDto.Id = await jobRepository.Add(jobDto);
+                jobDto.Id = await service.Add(jobDto);
             }
             catch (ItemAlreadyExistException ex)
             {
@@ -105,7 +105,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                bool result = await jobRepository.Add(jobs);
+                bool result = await service.Add(jobs);
                 return Ok(result);
             }
             catch (ItemAlreadyExistException ex)
@@ -120,7 +120,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                await jobRepository.Delete(id);
+                await service.Delete(id);
             }
             catch (ItemAlreadyExistException ex)
             {

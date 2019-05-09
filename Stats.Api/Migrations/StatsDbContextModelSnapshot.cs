@@ -193,6 +193,30 @@ namespace Stats.Api.Migrations
                     b.ToTable("Players");
                 });
 
+            modelBuilder.Entity("Stats.Api.Models.Reference", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Competition");
+
+                    b.Property<Guid?>("CreatedBy");
+
+                    b.Property<string>("LocalValue")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("ReferenceValue")
+                        .HasMaxLength(64);
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("References");
+                });
+
             modelBuilder.Entity("Stats.Api.Models.Round", b =>
                 {
                     b.Property<Guid>("Id")

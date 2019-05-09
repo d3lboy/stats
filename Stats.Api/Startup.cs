@@ -29,8 +29,9 @@ namespace Stats.Api
                 .BuildServiceProvider();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddTransient<IJobs, Jobs>();
-            services.AddTransient<IRounds, Rounds>();
+            services.AddTransient<IJobService, JobService>();
+            services.AddTransient<IRoundService, RoundService>();
+            services.AddTransient<IReferenceService, ReferenceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

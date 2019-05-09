@@ -2,8 +2,9 @@
 
 namespace Stats.Common.Dto
 {
-    public class GameFullDto : BaseDto
+    public class GameDto : BaseDto
     {
+        public Guid Id { get; set; }
         public Guid Round { get; set; }
         public Guid? SeasonId { get; set; }
         public int? RoundNumber { get; set; }

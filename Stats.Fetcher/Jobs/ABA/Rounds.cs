@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
@@ -20,7 +19,7 @@ namespace Stats.Fetcher.Jobs.ABA
         private readonly ILogger<Rounds> logger;
         private Guid season;
 
-        public Rounds(ILogger<Rounds> logger, IOptions<AppConfig> appConfig, IApiClient client) : base(logger, client)
+        public Rounds(ILogger<Rounds> logger, IApiClient client) : base(logger, client)
         {
             this.logger = logger;
         }
@@ -56,7 +55,7 @@ namespace Stats.Fetcher.Jobs.ABA
 
         public override bool CreateAdditionalJobs(WebPage page, out List<BaseDto> dtos)
         {
-            var jobs = new List<BaseDto>() {  };
+            var jobs = new List<BaseDto>();
 
             page.Html.CssSelect($"#accordion").CssSelect(".panel-default>.panel-heading").ToList().ForEach(x =>
             {

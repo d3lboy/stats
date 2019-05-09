@@ -12,10 +12,10 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class GamesController : ControllerBase
     {
-        private readonly IGames games;
-        public GamesController(IGames games)
+        private readonly IGameService service;
+        public GamesController(IGameService service)
         {
-            this.games = games;
+            this.service = service;
         }
         
         /// <summary>
@@ -26,7 +26,7 @@ namespace Stats.Api.Controllers
         [HttpGet("{id}")]
         public async Task<GameDto> Get(Guid id)
         {
-            return await games.Get(id);
+            return await service.Get(id);
         }
 
         // POST: api/Rounds
@@ -36,7 +36,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                await games.Add(items);
+                await service.Add(items);
                 return Ok(true);
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace Stats.Api.Controllers
                 if(id != dto.Id)
                     return BadRequest();
 
-                int result = await games.Update(dto);
+                int result = await service.Update(dto);
                 return Ok(result);
             }
             catch(ItemNotFoundException)
@@ -69,7 +69,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                int result = await games.Delete(id);
+                int result = await service.Delete(id);
                 return Ok(result);
             }
             catch (ItemNotFoundException)

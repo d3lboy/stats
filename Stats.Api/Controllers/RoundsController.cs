@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Stats.Api.Business;
 using Stats.Api.Business.Exceptions;
 using Stats.Api.Business.Interfaces;
 using Stats.Common.Dto;
@@ -13,16 +12,16 @@ namespace Stats.Api.Controllers
     [ApiController]
     public class RoundsController : ControllerBase
     {
-        private readonly IRounds roundsRepository;
-        public RoundsController(IRounds roundsRepository)
+        private readonly IRoundService service;
+        public RoundsController(IRoundService service)
         {
-            this.roundsRepository = roundsRepository;
+            this.service = service;
         }
         // GET: api/Rounds
         //[HttpGet]
         //public async Task<IEnumerable<RoundDto>> Get()
         //{
-        //    return roundsRepository.GetRounds()
+        //    return service.GetRounds()
         //}
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace Stats.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<RoundDto>> Get(Guid id)
         {
-            return await roundsRepository.Get(id);
+            return await service.Get(id);
         }
 
         // POST: api/Rounds
@@ -44,7 +43,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                await roundsRepository.Add(rounds);
+                await service.Add(rounds);
                 return Ok(true);
             }
             catch (Exception ex)
@@ -62,7 +61,7 @@ namespace Stats.Api.Controllers
                 if(id != dto.Id)
                     return BadRequest();
 
-                int result = await roundsRepository.Update(dto);
+                int result = await service.Update(dto);
                 return Ok(result);
             }
             catch(ItemNotFoundException)
@@ -77,7 +76,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                int result = await roundsRepository.Delete(id);
+                int result = await service.Delete(id);
                 return Ok(result);
             }
             catch (ItemNotFoundException)

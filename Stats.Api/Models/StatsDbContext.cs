@@ -19,5 +19,6 @@ namespace Stats.Api.Models
         public DbSet<Period> Periods { get; set; }
         public DbSet<BoxScore> BoxScores { get; set; }
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<Reference> References { get; set; }
     }
 }
