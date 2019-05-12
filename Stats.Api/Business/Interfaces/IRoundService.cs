@@ -7,11 +7,11 @@ namespace Stats.Api.Business.Interfaces
 {
     public interface IRoundService
     {
-        Task<List<RoundDto>> Get(Guid season);
-        Task<RoundDto> GetRound(Guid id);
-        Task<Guid> Add(RoundDto dto);
-        Task<int> Add(List<RoundDto> dtos);
-        Task<int> Update(RoundDto dto);
-        Task<int> Delete(Guid id);
+        Task<List<RoundDto>> GetAsync(Guid season);
+        Task<RoundDto> GetRoundAsync(Guid id);
+        Task<Guid> AddAsync(RoundDto dto);
+        Task<int> AddAsync(List<RoundDto> dtos);
+        Task<int> UpdateAsync(RoundDto dto);
+        Task<int> DeleteAsync(Guid id);
     }
 }

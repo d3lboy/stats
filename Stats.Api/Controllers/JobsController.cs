@@ -23,7 +23,7 @@ namespace Stats.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<JobDto>>> Get()
         {
-            var jobs = await service.Get();
+            var jobs = await service.GetAsync();
 
             if (!jobs.Any())
             {
@@ -39,7 +39,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                var job = await service.Get(id);
+                var job = await service.GetAsync(id);
                 return job;
             }
             catch (ItemNotFoundException)
@@ -54,7 +54,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                return await service.Get(filter);
+                return await service.GetAsync(filter);
             }
             catch (ItemNotFoundException)
             {
@@ -73,7 +73,7 @@ namespace Stats.Api.Controllers
 
             try
             {
-                await service.Update(jobDto);
+                await service.UpdateAsync(jobDto);
             }
             catch (ItemNotFoundException)
             {
@@ -89,7 +89,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                jobDto.Id = await service.Add(jobDto);
+                jobDto.Id = await service.AddAsync(jobDto);
             }
             catch (ItemAlreadyExistException ex)
             {
@@ -105,7 +105,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                bool result = await service.Add(jobs);
+                bool result = await service.AddAsync(jobs);
                 return Ok(result);
             }
             catch (ItemAlreadyExistException ex)
@@ -120,7 +120,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                await service.Delete(id);
+                await service.DeleteAsync(id);
             }
             catch (ItemAlreadyExistException ex)
             {

@@ -13,5 +13,7 @@ namespace Stats.Api.Models
         private Competition Competition { get; set; }
         [ForeignKey("Competition")]
         public Stats.Common.Enums.Competition CompetitionId { get; set; }
+
+        public string Teams { get; set; }
     }
 }

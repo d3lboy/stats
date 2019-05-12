@@ -23,7 +23,7 @@ namespace Stats.Api.Business
             this.mapper = mapper;
         }
 
-        public async Task<List<JobDto>> Get()
+        public async Task<List<JobDto>> GetAsync()
         {
             var jobs = await context.Jobs.Where(x => x.State == JobState.New)
                 .OrderBy(x => x.ScheduledDate).Take(10).ToListAsync();
@@ -31,7 +31,7 @@ namespace Stats.Api.Business
             return jobs.Any() ? jobs.Select(mapper.Map<JobDto>).ToList() : new List<JobDto>();
         }
 
-        public async Task<List<JobDto>> Get(JobFilter filter)
+        public async Task<List<JobDto>> GetAsync(JobFilter filter)
         {
             var result = await context.Jobs.Where(x =>
                         x.State == JobState.New)
@@ -40,7 +40,7 @@ namespace Stats.Api.Business
             return result.Any() ? result.Select(mapper.Map<JobDto>).ToList() : new List<JobDto>();
         }
 
-        public async Task<JobDto> Get(Guid id)
+        public async Task<JobDto> GetAsync(Guid id)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == id);
 
@@ -52,7 +52,7 @@ namespace Stats.Api.Business
             return mapper.Map<JobDto>(job);
         }
 
-        public async Task<Guid> Add(JobDto jobDto)
+        public async Task<Guid> AddAsync(JobDto jobDto)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == jobDto.Id);
             if (job != null)
@@ -69,7 +69,7 @@ namespace Stats.Api.Business
             return job.Id;
         }
 
-        public async Task<bool> Add(List<JobDto> jobs)
+        public async Task<bool> AddAsync(List<JobDto> jobs)
         {
             var parent = jobs.First().Id;          
             var existingJobs = await context.Jobs.Where(x => x.Parent == parent).Select(x=>x.Args).ToListAsync();
@@ -88,7 +88,7 @@ namespace Stats.Api.Business
             return true;
         }
 
-        public async Task<int> Update(JobDto jobDto)
+        public async Task<int> UpdateAsync(JobDto jobDto)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == jobDto.Id);
             if (job == null)
@@ -104,7 +104,7 @@ namespace Stats.Api.Business
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> Delete(Guid id)
+        public async Task<int> DeleteAsync(Guid id)
         {
             var job = await context.Jobs.SingleOrDefaultAsync(x => x.Id == id);
             if (job == null)

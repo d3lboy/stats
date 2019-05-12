@@ -7,10 +7,10 @@ namespace Stats.Api.Business.Interfaces
 {
     public interface IGameService
     {
-        Task<GameDto> Get(Guid id);
-        Task<Guid> Add(GameDto dto);
-        Task<int> Add(List<GameDto> dtos);
-        Task<int> Update(GameDto dto);
-        Task<int> Delete(Guid id);
+        Task<GameDto> GetAsync(Guid id);
+        Task<Guid> AddAsync(GameDto dto);
+        Task<int> AddAsync(List<GameDto> dtos);
+        Task<int> UpdateAsync(GameDto dto);
+        Task<int> DeleteAsync(Guid id);
     }
 }

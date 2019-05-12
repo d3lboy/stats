@@ -26,7 +26,7 @@ namespace Stats.Api.Controllers
         [HttpGet("{id}")]
         public async Task<GameDto> Get(Guid id)
         {
-            return await service.Get(id);
+            return await service.GetAsync(id);
         }
 
         // POST: api/Rounds
@@ -36,7 +36,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                await service.Add(items);
+                await service.AddAsync(items);
                 return Ok(true);
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace Stats.Api.Controllers
                 if(id != dto.Id)
                     return BadRequest();
 
-                int result = await service.Update(dto);
+                int result = await service.UpdateAsync(dto);
                 return Ok(result);
             }
             catch(ItemNotFoundException)
@@ -69,7 +69,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                int result = await service.Delete(id);
+                int result = await service.DeleteAsync(id);
                 return Ok(result);
             }
             catch (ItemNotFoundException)

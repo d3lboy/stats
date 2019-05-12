@@ -17,12 +17,7 @@ namespace Stats.Api.Controllers
         {
             this.service = service;
         }
-        // GET: api/Rounds
-        //[HttpGet]
-        //public async Task<IEnumerable<RoundDto>> Get()
-        //{
-        //    return service.GetRounds()
-        //}
+        
 
         /// <summary>
         /// Get rounds from a season
@@ -33,7 +28,7 @@ namespace Stats.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<RoundDto>> Get(Guid id)
         {
-            return await service.Get(id);
+            return await service.GetAsync(id);
         }
 
         // POST: api/Rounds
@@ -43,7 +38,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                await service.Add(rounds);
+                await service.AddAsync(rounds);
                 return Ok(true);
             }
             catch (Exception ex)
@@ -61,7 +56,7 @@ namespace Stats.Api.Controllers
                 if(id != dto.Id)
                     return BadRequest();
 
-                int result = await service.Update(dto);
+                int result = await service.UpdateAsync(dto);
                 return Ok(result);
             }
             catch(ItemNotFoundException)
@@ -76,7 +71,7 @@ namespace Stats.Api.Controllers
         {
             try
             {
-                int result = await service.Delete(id);
+                int result = await service.DeleteAsync(id);
                 return Ok(result);
             }
             catch (ItemNotFoundException)

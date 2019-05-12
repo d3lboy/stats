@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -17,7 +14,7 @@ using Competition = Stats.Common.Enums.Competition;
 
 namespace Stats.Fetcher.Jobs.ABA
 {
-    [JobFlags(Common.Enums.Competition.Aba, JobType.Round)]
+    [JobFlags(Competition.Aba, JobType.Round)]
     public class Round:JobBase
     {
         private readonly ILogger<Round> logger;
@@ -45,7 +42,7 @@ namespace Stats.Fetcher.Jobs.ABA
             
             page.Html.CssSelect($"#collapse_{Arguments["round"]} tbody>tr").ToList().ForEach(tr =>
                 {
-                    string url = tr.CssSelect("a").FirstOrDefault()?.Attributes["href"].Value;
+                    string url = tr.CssSelect("a").Skip(5).FirstOrDefault()?.Attributes["href"].Value;
                     string date = tr.CssSelect(".locationtable").FirstOrDefault()?.InnerText;
                     
                     result.Add(new JobDto

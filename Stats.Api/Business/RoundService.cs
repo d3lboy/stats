@@ -22,14 +22,14 @@ namespace Stats.Api.Business
             this.mapper = mapper;
         }
 
-        public async Task<List<RoundDto>> Get(Guid season)
+        public async Task<List<RoundDto>> GetAsync(Guid season)
         {
             var rounds = await context.Rounds.Where(x => x.SeasonId == season).ToListAsync();
 
             return rounds.Any() ? rounds.Select(mapper.Map<RoundDto>).ToList() : default;
         }
 
-        public async Task<RoundDto> GetRound(Guid id)
+        public async Task<RoundDto> GetRoundAsync(Guid id)
         {
             var round = await context.Rounds.SingleOrDefaultAsync(x => x.Id == id);
 
@@ -41,7 +41,7 @@ namespace Stats.Api.Business
             return mapper.Map<RoundDto>(round);
         }
 
-        public async Task<Guid> Add(RoundDto dto)
+        public async Task<Guid> AddAsync(RoundDto dto)
         {
             var round = await context.Rounds.SingleOrDefaultAsync(x => x.Id == dto.Id);
             if (round != null)
@@ -58,7 +58,7 @@ namespace Stats.Api.Business
             return round.Id;
         }
 
-        public async Task<int> Add(List<RoundDto> dtos)
+        public async Task<int> AddAsync(List<RoundDto> dtos)
         {
             Guid? seasonId = dtos.FirstOrDefault()?.Season;
 
@@ -87,7 +87,7 @@ namespace Stats.Api.Business
             }
         }
 
-        public async Task<int> Update(RoundDto dto)
+        public async Task<int> UpdateAsync(RoundDto dto)
         {
             var round = await context.Rounds.SingleOrDefaultAsync(x => x.Id == dto.Id);
             if (round == null)
@@ -98,7 +98,7 @@ namespace Stats.Api.Business
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> Delete(Guid id)
+        public async Task<int> DeleteAsync(Guid id)
         {
             var round = await context.Rounds.SingleOrDefaultAsync(x => x.Id == id);
             if (round == null)

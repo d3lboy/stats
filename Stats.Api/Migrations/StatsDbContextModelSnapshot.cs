@@ -249,6 +249,8 @@ namespace Stats.Api.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(20);
 
+                    b.Property<string>("Teams");
+
                     b.Property<DateTime>("Timestamp");
 
                     b.HasKey("Id");

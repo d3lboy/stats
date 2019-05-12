@@ -22,13 +22,13 @@ namespace Stats.Api.Business
             this.context = context;
             this.mapper = mapper;
         }
-        public async Task<List<ReferenceDto>> Get(Competition competition)
+        public async Task<List<ReferenceDto>> GetAsync(Competition competition)
         {
             var result = await context.References.Where(x => x.Competition == competition).ToListAsync();
             return mapper.Map<List<ReferenceDto>>(result);
         }
 
-        public async Task<List<ReferenceDto>> Get(Competition competition, ReferenceType type)
+        public async Task<List<ReferenceDto>> GetAsync(Competition competition, ReferenceType type)
         {
             var result = await context.References.Where(x => x.Competition == competition && x.Type == type).ToListAsync();
             return mapper.Map<List<ReferenceDto>>(result);

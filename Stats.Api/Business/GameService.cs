@@ -22,7 +22,7 @@ namespace Stats.Api.Business
             this.mapper = mapper;
         }
 
-        public async Task<GameDto> Get(Guid id)
+        public async Task<GameDto> GetAsync(Guid id)
         {
             var round = await context.Games.SingleOrDefaultAsync(x => x.Id == id);
 
@@ -34,7 +34,7 @@ namespace Stats.Api.Business
             return mapper.Map<GameDto>(round);
         }
 
-        public async Task<Guid> Add(GameDto dto)
+        public async Task<Guid> AddAsync(GameDto dto)
         {
             var game = await context.Games.SingleOrDefaultAsync(x => x.Id == dto.Id);
             if (game != null)
@@ -51,7 +51,7 @@ namespace Stats.Api.Business
             return game.Id;
         }
 
-        public async Task<int> Add(List<GameDto> dtos)
+        public async Task<int> AddAsync(List<GameDto> dtos)
         {
             var firstDto = dtos.FirstOrDefault();
             
@@ -86,7 +86,7 @@ namespace Stats.Api.Business
             }
         }
 
-        public async Task<int> Update(GameDto dto)
+        public async Task<int> UpdateAsync(GameDto dto)
         {
             var game = await context.Games.SingleOrDefaultAsync(x => x.Id == dto.Id);
             if (game == null)
@@ -97,7 +97,7 @@ namespace Stats.Api.Business
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> Delete(Guid id)
+        public async Task<int> DeleteAsync(Guid id)
         {
             var game = await context.Games.SingleOrDefaultAsync(x => x.Id == id);
             if (game == null)

@@ -7,12 +7,12 @@ namespace Stats.Api.Business.Interfaces
 {
     public interface IJobService
     {
-        Task<List<JobDto>> Get();
-        Task<List<JobDto>> Get(JobFilter filter);
-        Task<JobDto> Get(Guid id);
-        Task<Guid> Add(JobDto jobDto);
-        Task<bool> Add(List<JobDto> jobs);
-        Task<int> Update(JobDto jobDto);
-        Task<int> Delete(Guid id);
+        Task<List<JobDto>> GetAsync();
+        Task<List<JobDto>> GetAsync(JobFilter filter);
+        Task<JobDto> GetAsync(Guid id);
+        Task<Guid> AddAsync(JobDto jobDto);
+        Task<bool> AddAsync(List<JobDto> jobs);
+        Task<int> UpdateAsync(JobDto jobDto);
+        Task<int> DeleteAsync(Guid id);
     }
 }
