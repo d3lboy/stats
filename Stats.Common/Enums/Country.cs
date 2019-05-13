@@ -2,12 +2,13 @@
 {
     public enum Country
     {
+        Unknown = 0,
         Serbia = 1,
-        Bosnia,
-        Croatia,
-        Montenegro,
-        Slovenia,
-        Macedonia,
-        Yugoslavia
+        Bosnia = 2,
+        Croatia = 3,
+        Montenegro = 4,
+        Slovenia = 5,
+        Macedonia = 6,
+        Yugoslavia = 1000
     }
 }

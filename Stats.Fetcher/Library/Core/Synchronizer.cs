@@ -24,12 +24,12 @@ namespace Stats.Fetcher.Library.Core
             this.cache = cache;
             this.client = client;
 
-            this.cache.JobFinished+=JobFinished;
-            this.cache.JobUpdated+=JobUpdated;
+            this.cache.JobFinished += JobFinished;
+            this.cache.JobUpdated += JobUpdated;
 
-            Task.Run(async () => { await FetchNewJobs();});
+            Task.Run(async () => { await FetchNewJobs(); });
 
-            checkTimer = new Timer(appConfig.Value.CheckFrequency * 1000) {AutoReset = true};
+            checkTimer = new Timer(appConfig.Value.CheckFrequency * 1000) { AutoReset = true };
             checkTimer.Elapsed += CheckTimerElapsed;
             checkTimer.Start();
         }
@@ -41,7 +41,7 @@ namespace Stats.Fetcher.Library.Core
 
         private void JobUpdated(JobDto job)
         {
-            Task.Run(async () => { await UpdateJob(job);});
+            Task.Run(async () => { await UpdateJob(job); });
         }
 
         private async void CheckTimerElapsed(object sender, ElapsedEventArgs e)
@@ -51,7 +51,7 @@ namespace Stats.Fetcher.Library.Core
 
         private void JobFinished(JobDto obj)
         {
-            Task.Run(async ()=>
+            Task.Run(async () =>
             {
                 await DownloadNewJobs();
             });
@@ -60,7 +60,7 @@ namespace Stats.Fetcher.Library.Core
         private async Task DownloadNewJobs()
         {
             checkTimer.Stop();
-            
+
             try
             {
                 if (cache.Count <= appConfig.Value.MinJobsInCache)
@@ -78,10 +78,10 @@ namespace Stats.Fetcher.Library.Core
             checkTimer.Start();
         }
 
-        private async Task<bool> UpdateJob(JobDto job)
+        private async Task UpdateJob(JobDto job)
         {
-            job.Source = $"jobs/{job.Id.ToString()}";
-            return await client.Put(job);
+            string endpoint = $"jobs/{job.Id.ToString()}";
+            await client.Put(endpoint, job);
         }
     }
 }

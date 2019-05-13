@@ -41,8 +41,9 @@ namespace Stats.Fetcher
 
                     services.AddSingleton<IHostedService, JobManager>();
                     services.AddSingleton<ICache, Cache>();
+                    services.AddSingleton<IApiClient, ApiClient>();
+
                     services.AddTransient<Browser, Browser>();
-                    services.AddTransient<IApiClient, ApiClient>();
                     services.AddTransient<IJobFactory, JobFactory>();
                     services.AddTransient<ICompetition, Competition>();
                     services.AddTransient<ICompetitionFactory, CompetitionFactory>();

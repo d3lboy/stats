@@ -29,15 +29,17 @@ namespace Stats.Fetcher.Jobs.ABA
             return page.Html.CssSelect("#accordion").Any();
         }
 
-        public override bool ParseHtml(WebPage page, out List<BaseDto> result)
+        public override bool ParseHtml(WebPage page, out RequestInfo requestInfo)
         {
-            result = new List<BaseDto>();
+            requestInfo = new RequestInfo();
             
             return true;
         }
 
-        public override bool CreateAdditionalJobs(WebPage page, out List<BaseDto> dtos)
+        public override bool CreateAdditionalJobs(WebPage page, out RequestInfo requestInfo)
         {
+            requestInfo = new RequestInfo();
+
             var result =  new List<BaseDto>();
             
             page.Html.CssSelect($"#collapse_{Arguments["round"]} tbody>tr").ToList().ForEach(tr =>
@@ -52,12 +54,11 @@ namespace Stats.Fetcher.Jobs.ABA
                         Parent = JobDto.Id,
                         ScheduledDate = Parser.ToDate(date),
                         Type = JobType.Game,
-                        Url = url,
-                        Source = "jobs/bulkinsert"
+                        Url = url
                     });
                 });
 
-            dtos = result;
+            requestInfo.Data = result;
             return false;
         }
 

@@ -51,14 +51,16 @@ namespace Stats.Fetcher.Library.Core
                 return false;
             }
 
-            if (!ParseHtml(page, out var items) || !items.Any())
+            if (!ParseHtml(page, out var postInfo) || postInfo == null || !postInfo.Data.Any())
             {
                 logger.LogWarning("Can't find items.");
             }
             else
             {
-                var item = items.First();
-                if (!await client.Post<bool>(item.Source, items))
+                bool result = (postInfo.SingleDto) ?
+                    !await client.Post<bool>(postInfo.Endpoint, postInfo.Data.First()):
+                    await client.Post<bool>(postInfo.Endpoint, postInfo.Data);
+                if (!result)
                 {
                     logger.LogWarning($"Bad response from a server.");
                     return false;
@@ -67,14 +69,14 @@ namespace Stats.Fetcher.Library.Core
           
             CreateAdditionalJobs(page, out var jobs);
 
-            if (!jobs.Any()) return true;
+            if (!jobs.Data.Any()) return true;
 
-            return await client.Post<bool>(jobs.First().Source, jobs);
+            return await client.Post<bool>("jobs/bulkinsert", jobs.Data);
         }
 
         public abstract bool IsLoadedCorrectly(WebPage page);
-        public abstract bool ParseHtml(WebPage page, out List<BaseDto> result);
-        public abstract bool CreateAdditionalJobs(WebPage page, out List<BaseDto> dtos);
+        public abstract bool ParseHtml(WebPage page, out RequestInfo requestInfo);
+        public abstract bool CreateAdditionalJobs(WebPage page, out RequestInfo requestInfo);
         public abstract bool ValidateArguments();
 
         public virtual int? RescheduleInterval { get; set; }
@@ -84,7 +86,10 @@ namespace Stats.Fetcher.Library.Core
             try
             {
                 if (args.Trim() == "")
+                {
+                    Arguments = new Dictionary<string, object>();
                     return true;
+                }
 
                 Arguments = JsonConvert.DeserializeObject<Dictionary<string, object>>(args);
 
@@ -107,10 +112,6 @@ namespace Stats.Fetcher.Library.Core
         protected virtual void Dispose(bool disposing)
         {
             ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                client?.Dispose();
-            }
         }
 
         public void Dispose()

@@ -26,15 +26,15 @@ namespace Stats.Fetcher.Jobs.ABA
             return true;
         }
 
-        public override bool ParseHtml(WebPage page, out List<BaseDto> result)
+        public override bool ParseHtml(WebPage page, out RequestInfo requestInfo)
         {
-            result = new List<BaseDto>();
+            requestInfo = new RequestInfo();
             return true;
         }
 
-        public override bool CreateAdditionalJobs(WebPage page, out List<BaseDto> dtos)
+        public override bool CreateAdditionalJobs(WebPage page, out RequestInfo requestInfo)
         {
-            dtos = new List<BaseDto>();
+            requestInfo = new RequestInfo();
             return true;
         }
 

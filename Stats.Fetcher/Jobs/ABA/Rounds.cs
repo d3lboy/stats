@@ -29,8 +29,13 @@ namespace Stats.Fetcher.Jobs.ABA
             return page.Html.CssSelect("#main_content").Any();
         }
 
-        public override bool ParseHtml(WebPage page, out List<BaseDto> result)
+        public override bool ParseHtml(WebPage page, out RequestInfo requestInfo)
         {
+            requestInfo = new RequestInfo
+            {
+                Endpoint = "rounds"
+            };
+
             var rounds = new List<BaseDto>();
             page.Html.CssSelect($"#accordion").CssSelect(".panel-default>.panel-heading").ToList().ForEach(x =>
             {
@@ -39,7 +44,6 @@ namespace Stats.Fetcher.Jobs.ABA
                 int num = int.Parse(txt);
                 rounds.Add(new RoundDto
                 {
-                    Source = "rounds",
                     Season = season,
                     RoundNumber = num,
                     RoundType = RoundType.RegularSeason,
@@ -49,12 +53,14 @@ namespace Stats.Fetcher.Jobs.ABA
             });
 
             logger.LogDebug($"Loaded {rounds.Count} rounds.");
-            result = rounds;
+            requestInfo.Data = rounds;
             return true;
         }
 
-        public override bool CreateAdditionalJobs(WebPage page, out List<BaseDto> dtos)
+        public override bool CreateAdditionalJobs(WebPage page, out RequestInfo requestInfo)
         {
+            requestInfo = new RequestInfo();
+
             var jobs = new List<BaseDto>();
 
             page.Html.CssSelect($"#accordion").CssSelect(".panel-default>.panel-heading").ToList().ForEach(x =>
@@ -66,7 +72,6 @@ namespace Stats.Fetcher.Jobs.ABA
 
                 jobs.Add(new JobDto
                 {
-                    Source = "jobs/bulkinsert",
                     Id = Guid.NewGuid(),
                     State = JobState.New,
                     Competition = Competition.Aba,
@@ -79,7 +84,7 @@ namespace Stats.Fetcher.Jobs.ABA
                 });
             });
 
-            dtos = jobs;
+            requestInfo.Data = jobs;
 
             return true;
         }

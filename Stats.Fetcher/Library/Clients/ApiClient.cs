@@ -78,11 +78,6 @@ namespace Stats.Fetcher.Library.Clients
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> Put(BaseDto dto)
-        {
-            return await Put(dto.Source, dto);
-        }
-
         public async Task<bool> Delete(string action)
         {
             string url = $"{appConfig.Value.ApiUrl}{action}";

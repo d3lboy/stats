@@ -10,6 +10,7 @@ namespace Stats.Fetcher.Jobs.ABA
             collection.AddTransient<Rounds, Rounds>();
             collection.AddTransient<Round, Round>();
             collection.AddTransient<Game, Game>();
+            collection.AddTransient<Team, Team>();
         }
     }
 }

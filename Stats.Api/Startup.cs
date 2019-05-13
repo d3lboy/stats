@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Stats.Api.Business;
-using Stats.Api.Business.Interfaces;
 using Stats.Api.Models;
 
 namespace Stats.Api
@@ -29,9 +27,7 @@ namespace Stats.Api
                 .BuildServiceProvider();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddTransient<IJobService, JobService>();
-            services.AddTransient<IRoundService, RoundService>();
-            services.AddTransient<IReferenceService, ReferenceService>();
+            DiRegistry.Init(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
