@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 using Stats.Common.Dto;
@@ -49,7 +49,7 @@ namespace Stats.Fetcher.Jobs.ABA
                     
                     result.Add(new JobDto
                     {
-                        Args = JsonConvert.SerializeObject(Arguments),
+                        Args = JsonSerializer.Serialize(Arguments),
                         Competition = Competition.Aba,
                         Parent = JobDto.Id,
                         ScheduledDate = Parser.ToDate(date),

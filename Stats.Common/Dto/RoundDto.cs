@@ -9,6 +9,5 @@ namespace Stats.Common.Dto
         public int RoundNumber { get; set; }
         public Guid Season { get; set; }
         public RoundType RoundType { get; set; }
-        public DateTime Timestamp { get; set; }
     }
 }

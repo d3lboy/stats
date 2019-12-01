@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO.Compression;
 using Stats.Common.Enums;
 
 namespace Stats.Fetcher.Library.Core

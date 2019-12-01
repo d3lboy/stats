@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 using Stats.Common.Dto;
@@ -77,7 +77,7 @@ namespace Stats.Fetcher.Jobs.ABA
                     Competition = Competition.Aba,
                     ScheduledDate = DateTime.Now,
                     CreatedBy = JobDto.Id,
-                    Args = JsonConvert.SerializeObject(Arguments),
+                    Args = JsonSerializer.Serialize(Arguments),
                     Type = JobType.Round,
                     Url = "https://www.aba-liga.com/calendar.php",
                     Parent = season

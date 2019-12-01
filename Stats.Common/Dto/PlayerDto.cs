@@ -2,7 +2,7 @@
 
 namespace Stats.Common.Dto
 {
-    public class Player : BaseDto
+    public class PlayerDto : BaseDto
     {
         public Guid Guid { get; set; }
         public Guid League { get; set; }
@@ -12,10 +12,5 @@ namespace Stats.Common.Dto
 
         public string Position { get; set; }
         public ushort Height { get; set; }
-
-        public override string ToString()
-        {
-            return $"{Name}";
-        }
     }
 }

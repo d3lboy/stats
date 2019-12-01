@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using ScrapySharp.Network;
 using Stats.Common.Dto;
 using Stats.Fetcher.Library.Clients;
@@ -91,7 +91,7 @@ namespace Stats.Fetcher.Library.Core
                     return true;
                 }
 
-                Arguments = JsonConvert.DeserializeObject<Dictionary<string, object>>(args);
+                Arguments = JsonSerializer.Deserialize<Dictionary<string, object>>(args);
 
                 return true;
             }

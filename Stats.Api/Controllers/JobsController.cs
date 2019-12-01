@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using Stats.Api.Business.Exceptions;
 using Stats.Api.Business.Interfaces;
 using Stats.Common.Dto;
@@ -24,7 +25,7 @@ namespace Stats.Api.Controllers
         public async Task<ActionResult<List<JobDto>>> Get()
         {
             var jobs = await service.GetAsync();
-
+            Log.Debug($"Loaded {jobs.Count} jobs.");
             if (!jobs.Any())
             {
                 return NotFound();

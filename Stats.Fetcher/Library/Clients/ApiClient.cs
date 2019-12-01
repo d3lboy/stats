@@ -2,10 +2,10 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Stats.Common.Dto;
 
 namespace Stats.Fetcher.Library.Clients
@@ -33,13 +33,13 @@ namespace Stats.Fetcher.Library.Clients
             if (!response.IsSuccessStatusCode) return default;
 
             string str = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(str);
+            return JsonSerializer.Deserialize<T>(str);
         }
 
         public async Task<bool> Post(string action, BaseDto dto)
         {
             string url = $"{appConfig.Value.ApiUrl}{action}";
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync(url, content);
             return response.IsSuccessStatusCode;
@@ -48,31 +48,31 @@ namespace Stats.Fetcher.Library.Clients
         public async Task<T> Post<T>(string action, List<BaseDto> dtos)
         {
             string url = $"{appConfig.Value.ApiUrl}{action}";
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(dtos), Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(dtos), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync(url, content);
             if (!response.IsSuccessStatusCode) return default;
 
             string str = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(str);
+            return JsonSerializer.Deserialize<T>(str);
         }
 
         public async Task<T> Post<T>(string action, BaseDto dto)
         {
             string url = $"{appConfig.Value.ApiUrl}{action}";
-            HttpContent content= new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+            HttpContent content= new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync(url, content);
             if (!response.IsSuccessStatusCode) return default;
 
             string str = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(str);
+            return JsonSerializer.Deserialize<T>(str);
         }
 
         public async Task<bool> Put(string action, BaseDto dto)
         {
             string url = $"{appConfig.Value.ApiUrl}{action}";
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
 
             var response = await client.PutAsync(url, content);
             return response.IsSuccessStatusCode;
