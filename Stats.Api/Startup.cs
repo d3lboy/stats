@@ -29,9 +29,7 @@ namespace Stats.Api
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<StatsDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("StatsDb")))
-                .BuildServiceProvider();
+            services.AddDbContext<StatsDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("StatsDb")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             DiRegistry.Init(services);
@@ -43,7 +41,7 @@ namespace Stats.Api
             context.Seed();
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseRouting();
         }
 
         private void ConfigureLogging()
